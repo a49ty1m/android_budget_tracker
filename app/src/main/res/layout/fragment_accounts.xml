@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_dark">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        app:elevation="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BudgetTracker"
+                android:textColor="@color/accent_amber"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:letterSpacing="0.05"
+                android:textAllCaps="true"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Accounts"
+                android:textColor="@color/text_primary"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <!-- Summary Cards -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Total Balance Card -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        app:cardBackgroundColor="@color/accent_amber"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="20dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Total Balance"
+                                android:textColor="@color/bg_dark"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/tv_total_balance_summary"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="₹0.00"
+                                android:textColor="@color/bg_dark"
+                                android:textSize="24sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Total Savings Card -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="160dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        app:cardBackgroundColor="@color/bg_surface"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="20dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Total Savings"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/tv_total_savings_summary"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="₹0.00"
+                                android:textColor="@color/income_text"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Liabilities Card -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="160dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="20dp"
+                        app:cardBackgroundColor="@color/bg_surface"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="20dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Liabilities"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="₹0.00"
+                                android:textColor="@color/expense_text"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view_accounts"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wallet &amp; Bank Accounts"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:letterSpacing="0.1"
+                android:layout_marginBottom="16dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_accounts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
+
+            <TextView
+                android:id="@+id/tv_savings_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Savings Goals"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:letterSpacing="0.1"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="16dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_savings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab_add_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="24dp"
+        android:text="Add Account"
+        android:textColor="@color/bg_dark"
+        app:icon="@android:drawable/ic_input_add"
+        app:iconTint="@color/bg_dark"
+        app:backgroundTint="@color/accent_amber" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

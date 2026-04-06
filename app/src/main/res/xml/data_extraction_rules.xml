@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rules xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="LocusId">
+    <domain-config>
+        <domain includeSubdomains="true">example.com</domain>
+        <path-filter excludeList="true">
+            <path>test</path>
+        </path-filter>
+    </domain-config>
+</rules>

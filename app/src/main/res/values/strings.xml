@@ -1,0 +1,85 @@
+<resources>
+    <string name="app_name" translatable="false">BudgetTracker</string>
+    <string-array name="transaction_types">
+        <item>Income 💰</item>
+        <item>Expense 💸</item>
+        <item>Transfer 🔄</item>
+    </string-array>
+    
+    <string name="total_balance" translatable="false">Your Net Worth 💎</string>
+    <string name="currency_symbol" translatable="false">₹</string>
+    <string name="welcome_user" translatable="false">Hey %s, looking sharp! ✨</string>
+    <string name="add_transaction" translatable="false">Capture New Cash Flow</string>
+    <string name="transaction_history" translatable="false">The Money Trail 🐾</string>
+    <string name="no_transactions_yet" translatable="false">It\'s awfully quiet here... Time to make some money moves! 🔥</string>
+    <string name="total_income" translatable="false">Total Gains:</string>
+    <string name="total_expense" translatable="false">Total Burn:</string>
+    <string name="add_income" translatable="false">Level Up Balance!</string>
+    <string name="add_expense" translatable="false">Record Spending</string>
+    <string name="edit" translatable="false">Tweak</string>
+    <string name="switch_user">Change Persona</string>
+    <string name="delete_data" translatable="false">Nuke Everything 🧨</string>
+    <string name="clear" translatable="false">Wipe</string>
+    <string name="search_hint" translatable="false">Hunt for transactions...</string>
+    <string name="type_hint" translatable="false">What kind of move?</string>
+    <string name="amount_hint" translatable="false">How much?</string>
+    <string name="source_hint" translatable="false">Allowance, Side Hustle, Gift...</string>
+    <string name="note_hint" translatable="false">Secret details...</string>
+    <string name="optional" translatable="false"> (keep it secret?)</string>
+
+    <!-- New Non-Dull Strings -->
+    <string name="title_money_master">Money Master 👑</string>
+    <string name="welcome_rich">Hey Smilo, looking rich! 😎</string>
+    <string name="available_loot">AVAILABLE LOOT 💎</string>
+    <string name="battle_plan">Battle Plan:</string>
+    <string name="the_burn">spend</string>
+    <string name="daily_survival">got money</string>
+    <string name="oops_spent_it">spend</string>
+    <string name="got_paid">got money</string>
+    <string name="where_loot_goes">Where the Loot Goes 🗺️</string>
+    <string name="zero_moves">Zero moves made this month. 👻</string>
+    <string name="latest_money_moves">Latest Money Moves 📈</string>
+    <string name="deep_dive">Deep Dive →</string>
+    <string name="the_damage">The Damage 💸</string>
+    <string name="where_did_it_go">Where did it go? 🤔</string>
+    <string name="hint_expense_source">Pizza? Rent? Spaceship? 🚀</string>
+    <string name="the_backstory">The Backstory 📖</string>
+    <string name="hint_confess">Confess your spending here...</string>
+    <string name="commit_the_burn">Commit the Burn 🧨</string>
+    <string name="collecting_the_bag">Collecting the Bag 💰</string>
+    <string name="incoming_loot">Incoming Loot 💎</string>
+    <string name="from_where">From Where? 🏗️</string>
+    <string name="hint_income_source">Salary, Side Hustle, Jackpot? 🍀</string>
+    <string name="hint_score">How did you score this? ✨</string>
+    <string name="secure_the_gains">Secure the Gains! 🚀</string>
+    <string name="frequent_gold_mines">Frequent Gold Mines ⛏️</string>
+    <string name="nuclear_option">Nuclear Option? ☢️</string>
+    <string name="nuclear_desc">This will wipe out every single transaction. There is no coming back from this void. Proceed with caution!</string>
+    <string name="nuclear_positive">Do it. 🧨</string>
+    <string name="nuclear_negative">Wait, I changed my mind! 😱</string>
+    <string name="poof_gone">Poof! It\'s all gone. 💨</string>
+    <string name="money_move_captured">Money move captured! 🚀</string>
+    <string name="enter_amount_hint">Enter an amount, don\'t be shy! 💸</string>
+    <string name="cancel">CANCEL</string>
+    <string name="update">UPDATE</string>
+    <string name="profile_name">Profile Name</string>
+    <string name="reset_transactions">RESET ALL TRANSACTIONS</string>
+    <string name="my_saving">save money</string>
+    <string name="save_money">save money</string>
+    <string name="active_savings">Active Savings 🏦</string>
+    <string name="label_spent">SPENT</string>
+    <string name="label_gained">GAINED</string>
+    <string name="label_limit">LIMIT</string>
+    <string name="label_total_stashed">Total Stashed:</string>
+    <string name="spent_format">💸 Spent: %1$s%2$.0f</string>
+    <string name="earned_format">💰 Earned: %1$s%2$.0f</string>
+    <string name="net_format">📊 Net: %1$s%2$s%3$.0f</string>
+    <string name="percentage_format">%1$d%%</string>
+    <string name="edit_transaction_title">Edit %1$s</string>
+    <string name="dialog_delete_title">Wipe this record?</string>
+    <string name="dialog_delete_message">This action cannot be undone. Ready to delete?</string>
+    <string name="entry_repaired">Entry repaired!</string>
+    <string name="invalid_amount">Invalid amount</string>
+    <string name="entry_deleted">Entry deleted</string>
+    <string name="delete">Delete</string>
+</resources>

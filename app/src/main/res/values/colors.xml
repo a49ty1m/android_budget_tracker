@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Catppuccin Mocha Theme Palette + Pinch of Yellow -->
+    <color name="bg_dark">#1e1e2e</color> <!-- mocha_base -->
+    <color name="bg_card">#181825</color> <!-- mocha_mantle -->
+    <color name="bg_surface">#11111b</color> <!-- mocha_crust -->
+    
+    <!-- Yellow Accents (pinch of yellow!) -->
+    <color name="accent_gold">#dfaf8f</color> <!-- mocha_peach -->
+    <color name="accent_amber">#f9e2af</color> <!-- mocha_yellow -->
+    <color name="accent_blue">#89b4fa</color> <!-- mocha_blue -->
+    <color name="accent_glow">#33f9e2af</color>
+    
+    <color name="money_left">#a6e3a1</color>  <!-- mocha_green -->
+    <color name="overspending">#f38ba8</color> <!-- mocha_red -->
+    <color name="income_glow">#30a6e3a1</color> <!-- green glow bg -->
+    <color name="expense_glow">#30f38ba8</color> <!-- red glow bg -->
+    <color name="net_yellow_glow">#30f9e2af</color> <!-- yellow glow for net -->
+    <color name="summary_stroke">#40f9e2af</color> <!-- yellow stroke glow -->
+    <color name="warning_orange">#f9e2af</color> <!-- yellow accent -->
+    
+    <!-- UI Elements -->
+    <color name="header_yellow">#f9e2af</color>
+    <color name="primary_yellow">#f9e2af</color>
+    <color name="income_green">#a6e3a1</color>
+    <color name="expense_red">#f38ba8</color>
+    <color name="delete_red">#f38ba8</color>
+    <color name="card_bg">#181825</color>
+    
+    <!-- Text Colors -->
+    <color name="text_primary">#cdd6f4</color> <!-- mocha_text -->
+    <color name="text_secondary">#a6adc8</color> <!-- mocha_subtext -->
+    <color name="text_muted">#585b70</color>
+    <color name="text_dark">#1e1e2e</color>
+    <color name="text_grey">#a6adc8</color>
+    
+    <!-- UI Elements -->
+    <color name="progress_bg">#313244</color> <!-- mocha_surface0 -->
+    <color name="white">#cdd6f4</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+    
+    <!-- Legacy / Compatibility -->
+    <color name="income_text">#a6e3a1</color>
+    <color name="expense_text">#f38ba8</color>
+</resources>

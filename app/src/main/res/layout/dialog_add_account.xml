@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@color/bg_card">
+
+    <TextView
+        android:id="@+id/tv_dialog_account_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Wallet/Account"
+        android:textColor="@color/text_primary"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="24dp"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Owner Name"
+        app:boxStrokeColor="@color/accent_amber"
+        app:hintTextColor="@color/accent_amber"
+        app:startIconDrawable="@android:drawable/ic_menu_myplaces"
+        app:startIconTint="@color/accent_amber">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
+            android:inputType="textPersonName" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Account Name (e.g. HDFC, Cash)"
+        app:boxStrokeColor="@color/accent_amber"
+        app:hintTextColor="@color/accent_amber"
+        app:startIconDrawable="@android:drawable/ic_menu_view"
+        app:startIconTint="@color/accent_amber">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_database_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Separating accounts helps you track cash vs bank moves."
+        android:textColor="@color/text_secondary"
+        android:textSize="12sp" />
+
+</LinearLayout>

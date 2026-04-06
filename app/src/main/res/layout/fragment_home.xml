@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_dark">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- Top Section -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp">
+
+                <ImageView
+                    android:id="@+id/iv_logo"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/ic_launcher" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/title_money_master"
+                    android:textColor="@color/text_primary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/btn_settings"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@android:drawable/ic_menu_preferences"
+                    app:tint="@color/accent_amber" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_welcome_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/welcome_rich"
+                android:textColor="@color/text_secondary"
+                android:textSize="20sp" />
+
+            <!-- Primary Hero Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_hero"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:cardBackgroundColor="@color/bg_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/available_loot"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp"
+                        android:textAllCaps="true"
+                        android:letterSpacing="0.1" />
+
+                    <TextView
+                        android:id="@+id/tv_remaining_balance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="₹0"
+                        android:textColor="@color/accent_amber"
+                        android:textSize="48sp"
+                        android:textStyle="bold" />
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:id="@+id/pb_budget_usage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:indicatorColor="@color/accent_amber"
+                        app:trackColor="@color/progress_bg"
+                        app:trackCornerRadius="4dp"
+                        app:trackThickness="10dp" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Stats Highlights -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:orientation="horizontal">
+
+                <!-- Spent -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    app:cardBackgroundColor="@color/bg_card"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/overspending">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="12dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Spent"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="10sp"
+                            android:textAllCaps="true"
+                            android:fontFamily="sans-serif-medium"
+                            android:letterSpacing="0.05" />
+                        <TextView
+                            android:id="@+id/tv_spent_so_far"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="₹0"
+                            android:textColor="@color/overspending"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Daily Limit -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="6dp"
+                    app:cardBackgroundColor="@color/bg_card"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/money_left">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="12dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Limit"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="10sp"
+                            android:textAllCaps="true"
+                            android:letterSpacing="0.05" />
+                        <TextView
+                            android:id="@+id/tv_daily_limit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="₹0"
+                            android:textColor="@color/money_left"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Savings -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    app:cardBackgroundColor="@color/bg_card"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/accent_amber">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="12dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Savings"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="10sp"
+                            android:textAllCaps="true"
+                            android:letterSpacing="0.05" />
+                        <TextView
+                            android:id="@+id/tv_home_total_saving"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="₹0"
+                            android:textColor="@color/accent_amber"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- Quick Actions -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_quick_expense"
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    android:text="@string/the_burn"
+                    android:textAllCaps="false"
+                    android:textColor="@color/bg_dark"
+                    app:backgroundTint="@color/overspending"
+                    app:cornerRadius="12dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_quick_income"
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="6dp"
+                    android:text="@string/got_paid"
+                    android:textAllCaps="false"
+                    android:textColor="@color/bg_dark"
+                    app:backgroundTint="@color/money_left"
+                    app:cornerRadius="12dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_quick_active"
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:text="@string/save_money"
+                    android:textAllCaps="false"
+                    android:textColor="@color/bg_dark"
+                    app:backgroundTint="@color/accent_amber"
+                    app:cornerRadius="12dp" />
+            </LinearLayout>
+
+            <!-- Category Insight Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:cardBackgroundColor="@color/bg_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
+                <LinearLayout
+                    android:id="@+id/ll_breakdown_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/where_loot_goes"
+                        android:textColor="@color/text_primary"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="16dp" />
+                    <TextView
+                        android:id="@+id/tv_no_data_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/zero_moves"
+                        android:textColor="@color/text_muted"
+                        android:gravity="center"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Active Savings Header -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/label_active_savings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/active_savings"
+                        android:textColor="@color/text_primary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="4dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_total_stashed"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+                        <TextView
+                            android:id="@+id/tv_my_saving"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:text="₹0"
+                            android:textColor="@color/accent_gold"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_view_all_savings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/deep_dive"
+                    android:textColor="@color/accent_amber"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_home_savings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/item_saving" />
+
+            <!-- Recent Transactions -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/latest_money_moves"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tv_view_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:text="@string/deep_dive"
+                    android:textColor="@color/accent_amber"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_recent_transactions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/item_transaction" />
+
+            <!-- Spacer for bottom -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="80dp" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
