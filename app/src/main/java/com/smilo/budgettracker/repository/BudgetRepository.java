@@ -128,6 +128,10 @@ public class BudgetRepository {
         executorService.execute(() -> budgetDAO.deleteSaving(saving));
     }
 
+    public void deleteAllSavingsForUser(int userId) {
+        executorService.execute(() -> budgetDAO.deleteAllSavingsForUser(userId));
+    }
+
     public LiveData<List<SavingWithAccount>> getAllSavings() {
         return budgetDAO.getAllSavings();
     }

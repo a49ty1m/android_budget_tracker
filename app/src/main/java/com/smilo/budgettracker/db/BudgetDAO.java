@@ -87,6 +87,9 @@ public interface BudgetDAO {
     @Query("SELECT s.*, ua.userName as userName, ua.databaseName as accountName FROM savings s JOIN user_accounts ua ON s.userId = ua.id ORDER BY s.createdAt DESC")
     LiveData<List<SavingWithAccount>> getAllSavings();
 
+    @Query("DELETE FROM savings WHERE userId = :userId")
+    void deleteAllSavingsForUser(int userId);
+
     @Query("SELECT ua.id, ua.userName, ua.databaseName, COALESCE(SUM(CASE WHEN t.type = 'Income' THEN t.amount ELSE -t.amount END), 0) as balance FROM user_accounts ua LEFT JOIN transactions t ON ua.id = t.userId GROUP BY ua.id")
     LiveData<List<AccountWithBalance>> getAccountsWithBalance();
 }

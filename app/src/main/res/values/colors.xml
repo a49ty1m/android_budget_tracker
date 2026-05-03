@@ -43,4 +43,7 @@
     <!-- Legacy / Compatibility -->
     <color name="income_text">#a6e3a1</color>
     <color name="expense_text">#f38ba8</color>
+
+    <!-- Logo Colors -->
+    <color name="app_logo_yellow">#fcd33d</color>
 </resources>

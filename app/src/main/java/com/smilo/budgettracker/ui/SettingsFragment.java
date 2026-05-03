@@ -61,8 +61,15 @@ public class SettingsFragment extends Fragment {
         });
 
         btnReset.setOnClickListener(v -> {
-            viewModel.resetData();
-            Toast.makeText(getContext(), "Transactions reset!", Toast.LENGTH_SHORT).show();
+            new androidx.appcompat.app.AlertDialog.Builder(requireContext(), R.style.Theme_BudgetTracker)
+                    .setTitle(R.string.nuclear_option)
+                    .setMessage(R.string.nuclear_desc)
+                    .setPositiveButton(R.string.nuclear_positive, (dialog, which) -> {
+                        viewModel.resetData();
+                        Toast.makeText(getContext(), R.string.poof_gone, Toast.LENGTH_SHORT).show();
+                    })
+                    .setNegativeButton(R.string.nuclear_negative, null)
+                    .show();
         });
     }
 }

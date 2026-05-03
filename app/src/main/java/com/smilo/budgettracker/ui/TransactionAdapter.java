@@ -10,8 +10,10 @@ import com.smilo.budgettracker.R;
 import com.smilo.budgettracker.db.TransactionEntity;
 import com.smilo.budgettracker.db.TransactionWithAccount;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.text.SimpleDateFormat;
 
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder> {
     
@@ -82,6 +84,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         int colorRes = isIncome ? R.color.money_left : R.color.overspending;
         holder.tvAmount.setTextColor(holder.itemView.getContext().getResources().getColor(colorRes));
 
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM, hh:mm a", Locale.getDefault());
+        holder.tvTime.setText(sdf.format(new Date(transaction.createdAt)));
+
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onTransactionClick(transaction);
@@ -95,7 +100,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     }
     
     static class TransactionViewHolder extends RecyclerView.ViewHolder {
-        TextView tvSource, tvAmount, tvNote, tvCategoryEmoji, tvPaymentMethod;
+        TextView tvSource, tvAmount, tvNote, tvCategoryEmoji, tvPaymentMethod, tvTime;
         
         TransactionViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -104,6 +109,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             tvNote = itemView.findViewById(R.id.tv_note);
             tvCategoryEmoji = itemView.findViewById(R.id.tv_category_emoji);
             tvPaymentMethod = itemView.findViewById(R.id.tv_payment_method);
+            tvTime = itemView.findViewById(R.id.tv_time);
         }
     }
 }

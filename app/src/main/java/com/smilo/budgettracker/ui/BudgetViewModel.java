@@ -142,6 +142,7 @@ public class BudgetViewModel extends AndroidViewModel {
         Integer userId = currentUserId.getValue();
         if (userId != null) {
             repository.deleteAllTransactionsForUser(userId);
+            repository.deleteAllSavingsForUser(userId);
         }
     }
     
