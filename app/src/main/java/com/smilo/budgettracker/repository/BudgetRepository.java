@@ -76,6 +76,30 @@ public class BudgetRepository {
         executorService.execute(() -> budgetDAO.deleteAllTransactionsForUser(userId));
     }
 
+    public interface OnResetListener {
+        void onResetComplete();
+    }
+
+    public void resetEverything(String newUserName, OnResetListener listener) {
+        executorService.execute(() -> {
+            budgetDAO.deleteAllTransactions();
+            budgetDAO.deleteAllSavings();
+            budgetDAO.deleteAllUserAccounts();
+            budgetDAO.deleteAllCategories();
+            
+            // Re-insert default account with the new name
+            long now = System.currentTimeMillis();
+            budgetDAO.insertUserAccount(new UserAccountEntity(newUserName, "Wallet", "💵", now, now));
+            
+            // Re-initialize default categories synchronously on this background thread
+            performInitDefaultCategories();
+            
+            if (listener != null) {
+                listener.onResetComplete();
+            }
+        });
+    }
+
     // Category Operations
     public void insertCategory(CategoryEntity category) {
         executorService.execute(() -> budgetDAO.insertCategory(category));
@@ -98,21 +122,22 @@ public class BudgetRepository {
     }
 
     public void initDefaultCategories() {
-        executorService.execute(() -> {
-            if (budgetDAO.getCategoryCountSync() == 0) {
-                budgetDAO.insertCategory(new CategoryEntity("Food", "Expense", "🍔"));
-                budgetDAO.insertCategory(new CategoryEntity("Travel", "Expense", "🚌"));
-                budgetDAO.insertCategory(new CategoryEntity("Shop", "Expense", "🛍️"));
-                budgetDAO.insertCategory(new CategoryEntity("Subs", "Expense", "📺"));
-                budgetDAO.insertCategory(new CategoryEntity("Rent", "Expense", "🏠"));
-                budgetDAO.insertCategory(new CategoryEntity("Other", "Expense", "✨"));
-                
-                budgetDAO.insertCategory(new CategoryEntity("Salary", "Income", "💰"));
-                budgetDAO.insertCategory(new CategoryEntity("Gift", "Income", "🎁"));
-                budgetDAO.insertCategory(new CategoryEntity("Freelance", "Income", "💼"));
-                budgetDAO.insertCategory(new CategoryEntity("Pocket", "Income", "💵"));
-            }
-        });
+        executorService.execute(this::performInitDefaultCategories);
+    }
+
+    private void performInitDefaultCategories() {
+        budgetDAO.insertCategory(new CategoryEntity("Food", "Expense", "🍔"));
+        budgetDAO.insertCategory(new CategoryEntity("Travel", "Expense", "🚌"));
+        budgetDAO.insertCategory(new CategoryEntity("Shop", "Expense", "🛍️"));
+        budgetDAO.insertCategory(new CategoryEntity("Subs", "Expense", "📺"));
+        budgetDAO.insertCategory(new CategoryEntity("Rent", "Expense", "🏠"));
+        budgetDAO.insertCategory(new CategoryEntity("Other", "Expense", "✨"));
+
+        budgetDAO.insertCategory(new CategoryEntity("Allowance", "Income", "👛"));
+        budgetDAO.insertCategory(new CategoryEntity("Salary", "Income", "💰"));
+        budgetDAO.insertCategory(new CategoryEntity("Freelance", "Income", "💼"));
+        budgetDAO.insertCategory(new CategoryEntity("Pocket", "Income", "💵"));
+        budgetDAO.insertCategory(new CategoryEntity("Extra Money", "Income", "✨"));
     }
 
     // Savings Operations

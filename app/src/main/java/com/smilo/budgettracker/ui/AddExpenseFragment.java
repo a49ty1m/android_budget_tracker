@@ -18,7 +18,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
@@ -26,6 +25,7 @@ import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.smilo.budgettracker.R;
+import com.smilo.budgettracker.db.AccountWithBalance;
 import com.smilo.budgettracker.db.CategoryEntity;
 import com.smilo.budgettracker.db.SavingEntity;
 import com.smilo.budgettracker.db.SavingWithAccount;
@@ -33,7 +33,10 @@ import com.smilo.budgettracker.db.TransactionEntity;
 import com.smilo.budgettracker.db.UserAccountEntity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.List;
@@ -42,7 +45,7 @@ public class AddExpenseFragment extends Fragment {
 
     private BudgetViewModel viewModel;
     private EditText etAmount, etNote;
-    private TextView tvTitle, tvCurrencySymbol;
+    private TextView tvTitle, tvCurrencySymbol, tvCatLabel;
     private ChipGroup cgCategories;
     private MaterialButtonToggleGroup toggleType;
     private MaterialButton btnSave;
@@ -51,7 +54,6 @@ public class AddExpenseFragment extends Fragment {
     private Calendar selectedDateTime = Calendar.getInstance();
     private List<SavingWithAccount> currentSavings;
     private ChipGroup cg_accounts;
-    private int selectedAccountId = 1;
 
     @Nullable
     @Override
@@ -67,6 +69,7 @@ public class AddExpenseFragment extends Fragment {
 
         tvTitle = view.findViewById(R.id.tv_add_title);
         tvCurrencySymbol = view.findViewById(R.id.tv_currency);
+        tvCatLabel = view.findViewById(R.id.tv_cat_label);
         etAmount = view.findViewById(R.id.et_amount);
         etNote = view.findViewById(R.id.et_note);
         cgCategories = view.findViewById(R.id.cg_categories);
@@ -77,7 +80,7 @@ public class AddExpenseFragment extends Fragment {
         btnDate = view.findViewById(R.id.btn_date);
         btnTime = view.findViewById(R.id.btn_time);
 
-        setupTypeToggle();
+        // setupTypeToggle(); // Delaying this
         setupDateTimePickers();
 
         // Handle arguments for initial state
@@ -95,18 +98,19 @@ public class AddExpenseFragment extends Fragment {
                 toggleType.check(R.id.btn_type_saving);
                 switchToSavingUI();
                 break;
-            case "Account":
-                toggleType.check(R.id.btn_type_account);
-                switchToAccountUI();
-                break;
             default:
                 toggleType.check(R.id.btn_type_expense);
                 switchToExpenseUI();
                 break;
         }
 
+        setupTypeToggle(); // Enable listener now
+
         viewModel.getAllSavings().observe(getViewLifecycleOwner(), savings -> {
             this.currentSavings = savings;
+            if (toggleType.getCheckedButtonId() == R.id.btn_type_saving) {
+                setupSavingsChips();
+            }
         });
 
         btnSave.setOnClickListener(v -> saveTransaction());
@@ -114,22 +118,51 @@ public class AddExpenseFragment extends Fragment {
             btnEditCategories.setOnClickListener(v -> showManageCategoriesDialog());
         }
         viewModel.getAllUserAccounts().observe(getViewLifecycleOwner(), this::setupAccountChips);
+        
+        view.post(this::updateCheckedButtonStyle);
     }
 
     private void setupTypeToggle() {
+        if (toggleType == null) return;
         toggleType.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (isChecked) {
+                updateCheckedButtonStyle();
                 if (checkedId == R.id.btn_type_income) {
                     switchToIncomeUI();
                 } else if (checkedId == R.id.btn_type_saving) {
                     switchToSavingUI();
-                } else if (checkedId == R.id.btn_type_account) {
-                    switchToAccountUI();
                 } else {
                     switchToExpenseUI();
                 }
             }
         });
+    }
+
+    private void updateCheckedButtonStyle() {
+        if (!isAdded() || getContext() == null || toggleType == null) return;
+        
+        int[] ids = {R.id.btn_type_expense, R.id.btn_type_income, R.id.btn_type_saving};
+        int checkedId = toggleType.getCheckedButtonId();
+        
+        for (int id : ids) {
+            MaterialButton btn = toggleType.findViewById(id);
+            if (btn == null) continue;
+            
+            if (id == checkedId) {
+                int colorRes = R.color.overspending;
+                if (id == R.id.btn_type_income) colorRes = R.color.money_left;
+                else if (id == R.id.btn_type_saving) colorRes = R.color.accent_blue;
+                
+                btn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), colorRes)));
+                btn.setTextColor(ContextCompat.getColor(requireContext(), R.color.bg_dark));
+                // Perfect elliptical shape
+                btn.setCornerRadius((int) (100 * getResources().getDisplayMetrics().density));
+            } else {
+                btn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.transparent)));
+                btn.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
+                btn.setCornerRadius((int) (100 * getResources().getDisplayMetrics().density));
+            }
+        }
     }
 
     private void setupDateTimePickers() {
@@ -156,8 +189,14 @@ public class AddExpenseFragment extends Fragment {
     }
 
     private void updateDateLabel() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
-        btnDate.setText(sdf.format(selectedDateTime.getTime()));
+        if (!isAdded() || btnDate == null) return;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM", Locale.getDefault());
+        Calendar now = Calendar.getInstance();
+        boolean isToday = selectedDateTime.get(Calendar.DAY_OF_YEAR) == now.get(Calendar.DAY_OF_YEAR) 
+                && selectedDateTime.get(Calendar.YEAR) == now.get(Calendar.YEAR);
+        
+        String dateStr = sdf.format(selectedDateTime.getTime());
+        btnDate.setText(isToday ? "Today, " + dateStr : dateStr);
     }
 
     private void updateTimeLabel() {
@@ -165,21 +204,10 @@ public class AddExpenseFragment extends Fragment {
         btnTime.setText(sdf.format(selectedDateTime.getTime()));
     }
 
-    private void switchToAccountUI() {
-        tvTitle.setText("Add Account");
-        int amber = ContextCompat.getColor(requireContext(), R.color.accent_amber);
-        tvCurrencySymbol.setTextColor(amber);
-        btnSave.setBackgroundTintList(ColorStateList.valueOf(amber));
-        btnEditCategories.setVisibility(View.GONE);
-        cgCategories.removeAllViews();
-        // Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_accountFragment);
-        Navigation.findNavController(requireView()).navigate(R.id.action_addExpenseFragment_to_accountFragment);
-        // Reset toggle to previous or default after navigation
-        toggleType.check(R.id.btn_type_expense);
-    }
-
     private void switchToIncomeUI() {
+        if (getContext() == null) return;
         tvTitle.setText("Received how much?");
+        if (tvCatLabel != null) tvCatLabel.setText("Category");
         int green = ContextCompat.getColor(requireContext(), R.color.money_left);
         tvCurrencySymbol.setTextColor(green);
         btnSave.setBackgroundTintList(ColorStateList.valueOf(green));
@@ -188,17 +216,21 @@ public class AddExpenseFragment extends Fragment {
     }
 
     private void switchToExpenseUI() {
+        if (getContext() == null) return;
         tvTitle.setText("Spent how much?");
-        int amber = ContextCompat.getColor(requireContext(), R.color.accent_amber);
-        tvCurrencySymbol.setTextColor(amber);
-        btnSave.setBackgroundTintList(ColorStateList.valueOf(amber));
+        if (tvCatLabel != null) tvCatLabel.setText("Category");
+        int red = ContextCompat.getColor(requireContext(), R.color.overspending);
+        tvCurrencySymbol.setTextColor(red);
+        btnSave.setBackgroundTintList(ColorStateList.valueOf(red));
         observeCategories("Expense");
         btnEditCategories.setVisibility(View.VISIBLE);
     }
 
     private void switchToSavingUI() {
-        tvTitle.setText("Save how much?");
-        int blue = ContextCompat.getColor(requireContext(), R.color.accent_amber); // Using amber for consistency if blue not defined
+        if (getContext() == null) return;
+        tvTitle.setText("Saving how much?");
+        if (tvCatLabel != null) tvCatLabel.setText("Goal");
+        int blue = ContextCompat.getColor(requireContext(), R.color.accent_blue);
         tvCurrencySymbol.setTextColor(blue);
         btnSave.setBackgroundTintList(ColorStateList.valueOf(blue));
         btnEditCategories.setVisibility(View.GONE);
@@ -220,60 +252,239 @@ public class AddExpenseFragment extends Fragment {
             chip.setText(category.emoji + " " + category.name);
             chip.setCheckable(true);
             chip.setClickable(true);
+            chip.setOnLongClickListener(v -> {
+                showEditCategoryDialog(category, null);
+                return true;
+            });
             cgCategories.addView(chip);
         }
 
         Chip customChip = new Chip(requireContext());
         customChip.setText("+ Custom");
         customChip.setChipBackgroundColorResource(R.color.bg_surface);
-        customChip.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
+        customChip.setTextColor(ContextCompat.getColor(requireContext(), R.color.accent_amber));
         customChip.setOnClickListener(v -> showAddCategoryDialog());
         cgCategories.addView(customChip);
     }
 
     private void setupSavingsChips() {
         cgCategories.removeAllViews();
-        if (currentSavings == null || currentSavings.isEmpty()) {
-            Toast.makeText(getContext(), "No savings goals found. Create one in Accounts.", Toast.LENGTH_SHORT).show();
-            return;
+        if (currentSavings != null) {
+            for (SavingWithAccount item : currentSavings) {
+                SavingEntity saving = item.saving;
+                Chip chip = new Chip(new ContextThemeWrapper(requireContext(), R.style.Widget_App_Chip));
+                String text = saving.emoji + " " + saving.goalName;
+                chip.setText(text);
+                chip.setTag(saving);
+                chip.setCheckable(true);
+                chip.setClickable(true);
+                chip.setOnLongClickListener(v -> {
+                    showEditSavingDialog(saving);
+                    return true;
+                });
+                cgCategories.addView(chip);
+            }
         }
 
-        for (SavingWithAccount item : currentSavings) {
-            SavingEntity saving = item.saving;
-            Chip chip = new Chip(new ContextThemeWrapper(requireContext(), R.style.Widget_App_Chip));
-            String text = saving.emoji + " " + saving.goalName;
-            if (item.userName != null && item.accountName != null) {
-                text += String.format(" (%s-%s)", item.userName, item.accountName);
-            }
-            chip.setText(text);
-            chip.setTag(saving);
-            chip.setCheckable(true);
-            chip.setClickable(true);
-            cgCategories.addView(chip);
-        }
+        Chip addGoalChip = new Chip(requireContext());
+        addGoalChip.setText("+ New Goal");
+        addGoalChip.setChipBackgroundColorResource(R.color.bg_surface);
+        addGoalChip.setTextColor(ContextCompat.getColor(requireContext(), R.color.accent_amber));
+        addGoalChip.setOnClickListener(v -> showAddSavingDialog());
+        cgCategories.addView(addGoalChip);
     }
 
     private void setupAccountChips(List<UserAccountEntity> accounts) {
         if (cg_accounts == null) return;
         cg_accounts.removeAllViews();
-        if (accounts == null || accounts.isEmpty()) {
-            return;
+        
+        if (accounts != null) {
+            for (UserAccountEntity account : accounts) {
+                Chip chip = new Chip(new ContextThemeWrapper(requireContext(), R.style.Widget_App_Chip));
+                chip.setText(account.emoji + " " + account.userName + "-" + account.databaseName);
+                chip.setTag(account.id);
+                chip.setCheckable(true);
+                chip.setClickable(true);
+                chip.setOnLongClickListener(v -> {
+                    showEditAccountDialog(account);
+                    return true;
+                });
+                cg_accounts.addView(chip);
+            }
         }
-        for (UserAccountEntity account : accounts) {
-            Chip chip = new Chip(new ContextThemeWrapper(requireContext(), R.style.Widget_App_Chip));
-            String displayName = String.format("(%s-%s)", account.userName, account.databaseName);
-            chip.setText(displayName);
-            chip.setTag(account.id);
-            chip.setId(View.generateViewId());
-            chip.setCheckable(true);
-            chip.setClickable(true);
-            cg_accounts.addView(chip);
-        }
-        // Auto select first
-        if (cg_accounts.getChildCount() > 0 && cg_accounts.getCheckedChipId() == View.NO_ID) {
+
+        Chip addChip = new Chip(requireContext());
+        addChip.setText("+ New Wallet");
+        addChip.setChipBackgroundColorResource(R.color.bg_surface);
+        addChip.setTextColor(ContextCompat.getColor(requireContext(), R.color.accent_amber));
+        addChip.setOnClickListener(v -> showAddAccountDialog());
+        cg_accounts.addView(addChip);
+
+        if (cg_accounts.getChildCount() > 1 && cg_accounts.getCheckedChipId() == View.NO_ID) {
             Chip firstChip = (Chip) cg_accounts.getChildAt(0);
             firstChip.setChecked(true);
         }
+    }
+
+    private void showAddSavingDialog() {
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_saving, null);
+        EditText etGoalName = dialogView.findViewById(R.id.et_goal_name);
+        EditText etTargetAmount = dialogView.findViewById(R.id.et_target_amount);
+        EditText etCurrentAmount = dialogView.findViewById(R.id.et_current_amount);
+        EditText etEmoji = dialogView.findViewById(R.id.et_emoji);
+        AutoCompleteTextView actvAccount = dialogView.findViewById(R.id.actv_saving_account);
+
+        final List<AccountWithBalance>[] accountsWrapper = new List[1];
+        final int[] selectedAccountId = {-1};
+
+        viewModel.getAccountsWithBalance().observe(getViewLifecycleOwner(), accounts -> {
+            if (accounts != null && !accounts.isEmpty()) {
+                accountsWrapper[0] = accounts;
+                List<String> accountNames = new ArrayList<>();
+                for (AccountWithBalance acc : accounts) {
+                    accountNames.add(acc.emoji + " " + acc.databaseName);
+                }
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
+                        android.R.layout.simple_dropdown_item_1line, accountNames);
+                actvAccount.setAdapter(adapter);
+                actvAccount.setText(accountNames.get(0), false);
+                selectedAccountId[0] = accounts.get(0).id;
+            }
+        });
+
+        actvAccount.setOnItemClickListener((parent, view1, position, id) -> {
+            if (accountsWrapper[0] != null) {
+                selectedAccountId[0] = accountsWrapper[0].get(position).id;
+            }
+        });
+
+        new AlertDialog.Builder(requireContext(), R.style.Theme_BudgetTracker)
+                .setView(dialogView)
+                .setPositiveButton("Create", (dialog, which) -> {
+                    String name = etGoalName.getText().toString().trim();
+                    String targetStr = etTargetAmount.getText().toString().trim();
+                    String currentStr = etCurrentAmount.getText().toString().trim();
+                    String emoji = etEmoji.getText().toString().trim();
+
+                    if (!name.isEmpty() && !targetStr.isEmpty() && selectedAccountId[0] != -1) {
+                        try {
+                            double target = Double.parseDouble(targetStr);
+                            double current = currentStr.isEmpty() ? 0 : Double.parseDouble(currentStr);
+                            if (emoji.isEmpty()) emoji = "🎯";
+                            viewModel.insertSaving(new SavingEntity(selectedAccountId[0], name, target, current, emoji, System.currentTimeMillis()));
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(getContext(), "Invalid amount", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void showEditSavingDialog(SavingEntity saving) {
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_saving, null);
+        TextView tvTitle = dialogView.findViewById(R.id.tv_dialog_saving_title);
+        EditText etGoalName = dialogView.findViewById(R.id.et_goal_name);
+        EditText etTargetAmount = dialogView.findViewById(R.id.et_target_amount);
+        EditText etCurrentAmount = dialogView.findViewById(R.id.et_current_amount);
+        EditText etEmoji = dialogView.findViewById(R.id.et_emoji);
+        AutoCompleteTextView actvAccount = dialogView.findViewById(R.id.actv_saving_account);
+        com.google.android.material.textfield.TextInputLayout tilAccount = dialogView.findViewById(R.id.til_saving_account);
+
+        tvTitle.setText("Edit Saving Goal");
+        etGoalName.setText(saving.goalName);
+        etTargetAmount.setText(String.valueOf(saving.targetAmount));
+        etCurrentAmount.setText(String.valueOf(saving.currentAmount));
+        etEmoji.setText(saving.emoji);
+        tilAccount.setEnabled(false);
+
+        viewModel.getAccountsWithBalance().observe(getViewLifecycleOwner(), accounts -> {
+            if (accounts != null) {
+                for (AccountWithBalance acc : accounts) {
+                    if (acc.id == saving.userId) {
+                        actvAccount.setText(acc.emoji + " " + acc.databaseName, false);
+                        break;
+                    }
+                }
+            }
+        });
+
+        new AlertDialog.Builder(requireContext(), R.style.Theme_BudgetTracker)
+                .setTitle("Edit Saving Goal")
+                .setView(dialogView)
+                .setPositiveButton("Update", (dialog, which) -> {
+                    String name = etGoalName.getText().toString().trim();
+                    String targetStr = etTargetAmount.getText().toString().trim();
+                    String currentStr = etCurrentAmount.getText().toString().trim();
+                    String emoji = etEmoji.getText().toString().trim();
+
+                    if (!name.isEmpty() && !targetStr.isEmpty()) {
+                        try {
+                            saving.goalName = name;
+                            saving.targetAmount = Double.parseDouble(targetStr);
+                            saving.currentAmount = currentStr.isEmpty() ? 0 : Double.parseDouble(currentStr);
+                            saving.emoji = emoji.isEmpty() ? "🎯" : emoji;
+                            viewModel.updateSaving(saving);
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(getContext(), "Invalid amount", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setNegativeButton("Delete", (dialog, which) -> viewModel.deleteSaving(saving))
+                .setNeutralButton("Cancel", null)
+                .show();
+    }
+
+    private void showAddAccountDialog() {
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_account, null);
+        EditText etUserName = dialogView.findViewById(R.id.et_user_name);
+        EditText etDatabaseName = dialogView.findViewById(R.id.et_database_name);
+        EditText etEmoji = dialogView.findViewById(R.id.et_account_emoji);
+
+        new AlertDialog.Builder(requireContext(), R.style.Theme_BudgetTracker)
+                .setView(dialogView)
+                .setPositiveButton("Create", (dialog, which) -> {
+                    String name = etUserName.getText().toString().trim();
+                    String db = etDatabaseName.getText().toString().trim();
+                    String emoji = etEmoji.getText().toString().trim();
+                    if (!name.isEmpty() && !db.isEmpty()) {
+                        if (emoji.isEmpty()) emoji = "💵";
+                        long currentTime = System.currentTimeMillis();
+                        viewModel.insertAccount(new UserAccountEntity(name, db, emoji, currentTime, currentTime));
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void showEditAccountDialog(UserAccountEntity account) {
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit_account, null);
+        EditText etUserName = dialogView.findViewById(R.id.et_account_name);
+        EditText etDatabaseName = dialogView.findViewById(R.id.et_database_name);
+        EditText etEmoji = dialogView.findViewById(R.id.et_account_emoji);
+
+        etUserName.setText(account.userName);
+        etDatabaseName.setText(account.databaseName);
+        etEmoji.setText(account.emoji);
+
+        new AlertDialog.Builder(requireContext(), R.style.Theme_BudgetTracker)
+                .setTitle("Edit Account")
+                .setView(dialogView)
+                .setPositiveButton("Update", (dialog, which) -> {
+                    String userName = etUserName.getText().toString().trim();
+                    String dbName = etDatabaseName.getText().toString().trim();
+                    String emoji = etEmoji.getText().toString().trim();
+                    if (!userName.isEmpty() && !dbName.isEmpty()) {
+                        account.userName = userName;
+                        account.databaseName = dbName;
+                        account.emoji = emoji.isEmpty() ? "💵" : emoji;
+                        account.updatedAt = System.currentTimeMillis();
+                        viewModel.updateAccount(account);
+                    }
+                })
+                .setNegativeButton("Delete", (dialog, which) -> viewModel.deleteAccount(account))
+                .setNeutralButton("Cancel", null)
+                .show();
     }
 
     private void showAddCategoryDialog() {
@@ -281,13 +492,8 @@ public class AddExpenseFragment extends Fragment {
         EditText etName = dialogView.findViewById(R.id.et_category_name);
         EditText etEmoji = dialogView.findViewById(R.id.et_category_emoji);
         MaterialButtonToggleGroup toggleTypeGroup = dialogView.findViewById(R.id.toggle_category_type);
-
-        // Set default selection based on current transaction type
-        if (toggleType.getCheckedButtonId() == R.id.btn_type_income) {
-            toggleTypeGroup.check(R.id.btn_category_income);
-        } else {
-            toggleTypeGroup.check(R.id.btn_category_expense);
-        }
+        if (toggleType.getCheckedButtonId() == R.id.btn_type_income) toggleTypeGroup.check(R.id.btn_category_income);
+        else toggleTypeGroup.check(R.id.btn_category_expense);
 
         new AlertDialog.Builder(requireContext(), R.style.Theme_BudgetTracker)
                 .setTitle("Add Custom Category")
@@ -305,82 +511,6 @@ public class AddExpenseFragment extends Fragment {
                 .show();
     }
 
-    private void showManageCategoriesDialog() {
-        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_categories, null);
-        RecyclerView rv = dialogView.findViewById(R.id.rv_categories);
-        View fab = dialogView.findViewById(R.id.btn_add_category_top);
-        com.google.android.material.tabs.TabLayout tabLayout = dialogView.findViewById(R.id.tab_layout_categories);
-        
-        TextView tv = dialogView.findViewById(R.id.tv_categories_title);
-        if (tv != null) tv.setVisibility(View.GONE);
-
-        rv.setLayoutManager(new LinearLayoutManager(requireContext()));
-        CategoryAdapter adapter = new CategoryAdapter();
-        rv.setAdapter(adapter);
-
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                adapter.moveItem(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-                return true;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {}
-
-            @Override
-            public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-                super.clearView(recyclerView, viewHolder);
-                List<CategoryEntity> updatedList = adapter.getCategories();
-                for (int i = 0; i < updatedList.size(); i++) {
-                    updatedList.get(i).displayOrder = i;
-                    viewModel.updateCategory(updatedList.get(i));
-                }
-            }
-        });
-        itemTouchHelper.attachToRecyclerView(rv);
-
-        // Filter categories based on current transaction type
-        int typeId = toggleType.getCheckedButtonId();
-        String currentType = (typeId == R.id.btn_type_income) ? "Income" : "Expense";
-        
-        if (tabLayout != null) {
-            tabLayout.getTabAt(currentType.equals("Income") ? 1 : 0).select();
-            tabLayout.addOnTabSelectedListener(new com.google.android.material.tabs.TabLayout.OnTabSelectedListener() {
-                @Override
-                public void onTabSelected(com.google.android.material.tabs.TabLayout.Tab tab) {
-                    updateFilteredCategories(adapter, tab.getPosition());
-                }
-                @Override
-                public void onTabUnselected(com.google.android.material.tabs.TabLayout.Tab tab) {}
-                @Override
-                public void onTabReselected(com.google.android.material.tabs.TabLayout.Tab tab) {}
-            });
-        }
-
-        updateFilteredCategories(adapter, currentType.equals("Income") ? 1 : 0);
-
-        AlertDialog dialog = new AlertDialog.Builder(requireContext(), R.style.Theme_BudgetTracker)
-                .setView(dialogView)
-                .create();
-
-        Toolbar toolbar = dialogView.findViewById(R.id.toolbar_categories);
-        if (toolbar != null) {
-            toolbar.setNavigationOnClickListener(v -> dialog.dismiss());
-        }
-
-        adapter.setOnCategoryClickListener(category -> showEditCategoryDialog(category, tabLayout));
-        if (fab != null) {
-            fab.setOnClickListener(v -> showAddCategoryDialog());
-        }
-        dialog.show();
-    }
-
-    private void updateFilteredCategories(CategoryAdapter adapter, int tabPosition) {
-        String type = (tabPosition == 0) ? "Expense" : "Income";
-        viewModel.getCategoriesByType(type).observe(getViewLifecycleOwner(), adapter::setCategories);
-    }
-
     private void showEditCategoryDialog(@Nullable CategoryEntity category, @Nullable com.google.android.material.tabs.TabLayout tabLayout) {
         View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_category, null);
         EditText etName = dialogView.findViewById(R.id.et_category_name);
@@ -391,28 +521,19 @@ public class AddExpenseFragment extends Fragment {
             etName.setText(category.name);
             etEmoji.setText(category.emoji);
             toggleTypeGroup.check(category.type.equals("Income") ? R.id.btn_category_income : R.id.btn_category_expense);
-        } else {
-            // Set default selection based on tab layout or transaction type
-            if (tabLayout != null) {
-                toggleTypeGroup.check(tabLayout.getSelectedTabPosition() == 1 ? R.id.btn_category_income : R.id.btn_category_expense);
-            } else {
-                toggleTypeGroup.check(toggleType.getCheckedButtonId() == R.id.btn_type_income ? R.id.btn_category_income : R.id.btn_category_expense);
-            }
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(), R.style.Theme_BudgetTracker)
+        new AlertDialog.Builder(requireContext(), R.style.Theme_BudgetTracker)
                 .setTitle(category == null ? "Add Category" : "Edit Category")
                 .setView(dialogView)
                 .setPositiveButton("Save", (dialog, which) -> {
                     String name = etName.getText().toString().trim();
                     String emoji = etEmoji.getText().toString().trim();
                     String type = (toggleTypeGroup.getCheckedButtonId() == R.id.btn_category_income) ? "Income" : "Expense";
-                    
                     if (!name.isEmpty()) {
                         if (emoji.isEmpty()) emoji = "✨";
-                        if (category == null) {
-                            viewModel.insertCategory(new CategoryEntity(name, type, emoji));
-                        } else {
+                        if (category == null) viewModel.insertCategory(new CategoryEntity(name, type, emoji));
+                        else {
                             category.name = name;
                             category.emoji = emoji;
                             category.type = type;
@@ -420,13 +541,44 @@ public class AddExpenseFragment extends Fragment {
                         }
                     }
                 })
-                .setNegativeButton("Cancel", null);
-        
-        if (category != null) {
-            builder.setNeutralButton("Delete", (dialog, which) -> viewModel.deleteCategory(category));
+                .setNegativeButton("Delete", (dialog, which) -> { if (category != null) viewModel.deleteCategory(category); })
+                .setNeutralButton("Cancel", null)
+                .show();
+    }
+
+    private void showManageCategoriesDialog() {
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_categories, null);
+        RecyclerView rv = dialogView.findViewById(R.id.rv_categories);
+        View fab = dialogView.findViewById(R.id.btn_add_category_top);
+        com.google.android.material.tabs.TabLayout tabLayout = dialogView.findViewById(R.id.tab_layout_categories);
+        if (dialogView.findViewById(R.id.tv_categories_title) != null) dialogView.findViewById(R.id.tv_categories_title).setVisibility(View.GONE);
+
+        rv.setLayoutManager(new LinearLayoutManager(requireContext()));
+        CategoryAdapter adapter = new CategoryAdapter();
+        rv.setAdapter(adapter);
+
+        int typeId = toggleType.getCheckedButtonId();
+        String currentType = (typeId == R.id.btn_type_income) ? "Income" : "Expense";
+        if (tabLayout != null) {
+            tabLayout.getTabAt(currentType.equals("Income") ? 1 : 0).select();
+            tabLayout.addOnTabSelectedListener(new com.google.android.material.tabs.TabLayout.OnTabSelectedListener() {
+                @Override public void onTabSelected(com.google.android.material.tabs.TabLayout.Tab tab) { updateFilteredCategories(adapter, tab.getPosition()); }
+                @Override public void onTabUnselected(com.google.android.material.tabs.TabLayout.Tab tab) {}
+                @Override public void onTabReselected(com.google.android.material.tabs.TabLayout.Tab tab) {}
+            });
         }
-        
-        builder.show();
+        updateFilteredCategories(adapter, currentType.equals("Income") ? 1 : 0);
+
+        AlertDialog dialog = new AlertDialog.Builder(requireContext(), R.style.Theme_BudgetTracker).setView(dialogView).create();
+        if (dialogView.findViewById(R.id.toolbar_categories) != null) ((Toolbar)dialogView.findViewById(R.id.toolbar_categories)).setNavigationOnClickListener(v -> dialog.dismiss());
+        adapter.setOnCategoryClickListener(c -> showEditCategoryDialog(c, tabLayout));
+        if (fab != null) fab.setOnClickListener(v -> showAddCategoryDialog());
+        dialog.show();
+    }
+
+    private void updateFilteredCategories(CategoryAdapter adapter, int tabPosition) {
+        String type = (tabPosition == 0) ? "Expense" : "Income";
+        viewModel.getCategoriesByType(type).observe(getViewLifecycleOwner(), adapter::setCategories);
     }
 
     private void saveTransaction() {
@@ -435,23 +587,16 @@ public class AddExpenseFragment extends Fragment {
             Toast.makeText(getContext(), "Please enter a valid amount", Toast.LENGTH_SHORT).show();
             return;
         }
-
         double amount = Double.parseDouble(amountStr);
         int selectedChipId = cgCategories.getCheckedChipId();
-        if (selectedChipId == View.NO_ID) {
-            Toast.makeText(getContext(), "Please select a category or goal", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         int accountChipId = cg_accounts.getCheckedChipId();
-        if (accountChipId == View.NO_ID) {
-            Toast.makeText(getContext(), "Please select an account", Toast.LENGTH_SHORT).show();
+        if (selectedChipId == View.NO_ID || accountChipId == View.NO_ID) {
+            Toast.makeText(getContext(), "Select account and category/goal", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Chip accChip = (Chip) cg_accounts.findViewById(accountChipId);
-        selectedAccountId = (Integer) accChip.getTag();
-
+        Chip accChip = cg_accounts.findViewById(accountChipId);
+        int selectedAccountId = (Integer) accChip.getTag();
         Chip selectedChip = cgCategories.findViewById(selectedChipId);
         int typeId = toggleType.getCheckedButtonId();
 
@@ -459,22 +604,16 @@ public class AddExpenseFragment extends Fragment {
             SavingEntity saving = (SavingEntity) selectedChip.getTag();
             if (saving != null) {
                 saving.currentAmount += amount;
-                // Note: SavingEntity only has createdAt, which usually refers to goal creation.
-                // However, we'll update it to the selected time to satisfy the "all transactions" requirement
-                // if the user intends this to be the timestamp of this specific "saving transaction".
-                // In a more complex app, we'd have a separate SavingTransaction table.
                 viewModel.updateSaving(saving);
+                // Record as Saving type so it shows clearly in history
+                TransactionEntity t = new TransactionEntity(selectedAccountId, "Saving", amount, "Saving", "🏦 " + saving.goalName, etNote.getText().toString(), selectedDateTime.getTimeInMillis());
+                viewModel.insertTransaction(t);
                 Navigation.findNavController(requireView()).popBackStack();
             }
         } else {
             String category = selectedChip.getText().toString();
             String type = (typeId == R.id.btn_type_income) ? "Income" : "Expense";
-            String source = "Default";
-            String note = etNote.getText().toString();
-
-            TransactionEntity transaction = new TransactionEntity(
-                selectedAccountId, type, amount, source, category, note, selectedDateTime.getTimeInMillis()
-            );
+            TransactionEntity transaction = new TransactionEntity(selectedAccountId, type, amount, "Default", category, etNote.getText().toString(), selectedDateTime.getTimeInMillis());
             viewModel.insertTransaction(transaction);
             Navigation.findNavController(requireView()).popBackStack();
         }

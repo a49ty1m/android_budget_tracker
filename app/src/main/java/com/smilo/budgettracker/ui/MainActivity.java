@@ -23,20 +23,11 @@ public class MainActivity extends AppCompatActivity {
             BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
             NavigationUI.setupWithNavController(bottomNav, navController);
 
-            // Ensure bottom navigation buttons always take you to the root of that section
             bottomNav.setOnItemSelectedListener(item -> {
-                int itemId = item.getItemId();
-                // If the destination is already in the backstack, pop back to it.
-                // This ensures we always go to the root of the selected section (e.g., from Account back to Add).
-                if (navController.popBackStack(itemId, false)) {
-                    return true;
+                if (item.getItemId() == R.id.homeFragment) {
+                    navController.popBackStack(R.id.homeFragment, false);
                 }
                 return NavigationUI.onNavDestinationSelected(item, navController);
-            });
-
-            // Reset to the section root when clicking the already-selected tab
-            bottomNav.setOnItemReselectedListener(item -> {
-                navController.popBackStack(item.getItemId(), false);
             });
         }
     }

@@ -1,9 +1,11 @@
 package com.smilo.budgettracker.db;
 
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "categories")
+@Entity(tableName = "categories",
+        indices = {@Index(value = {"name", "type"}, unique = true)})
 public class CategoryEntity {
     @PrimaryKey(autoGenerate = true)
     public int id;

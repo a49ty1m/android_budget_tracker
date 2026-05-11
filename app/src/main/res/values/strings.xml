@@ -53,17 +53,19 @@
     <string name="hint_score">How did you score this? ✨</string>
     <string name="secure_the_gains">Secure the Gains! 🚀</string>
     <string name="frequent_gold_mines">Frequent Gold Mines ⛏️</string>
-    <string name="nuclear_option">Nuclear Option? ☢️</string>
-    <string name="nuclear_desc">This will wipe out every single transaction. There is no coming back from this void. Proceed with caution!</string>
-    <string name="nuclear_positive">Do it. 🧨</string>
-    <string name="nuclear_negative">Wait, I changed my mind! 😱</string>
-    <string name="poof_gone">Poof! It\'s all gone. 💨</string>
+    <string name="nuclear_option">Fresh Start? 🧹</string>
+    <string name="nuclear_desc">This will wipe out EVERYTHING. You will start with a clean slate. Enter the name you want to use for your new wallet:</string>
+    <string name="nuclear_positive">RESET &amp; START FRESH</string>
+    <string name="nuclear_negative">NO, KEEP MY DATA</string>
+    <string name="poof_gone">Poof! Welcome to your fresh start. 💨</string>
     <string name="money_move_captured">Money move captured! 🚀</string>
     <string name="enter_amount_hint">Enter an amount, don\'t be shy! 💸</string>
     <string name="cancel">CANCEL</string>
     <string name="update">UPDATE</string>
     <string name="profile_name">Profile Name</string>
-    <string name="reset_transactions">NUKE TRANSACTIONS &amp; SAVINGS 🧨</string>
+    <string name="reset_transactions">RESET EVERYTHING 🧹</string>
+    <string name="reset_confirm_hint">Your Name</string>
+    <string name="reset_error_empty">Name cannot be empty!</string>
     <string name="my_saving">save money</string>
     <string name="save_money">save money</string>
     <string name="active_savings">Active Savings 🏦</string>
@@ -82,4 +84,5 @@
     <string name="invalid_amount">Invalid amount</string>
     <string name="entry_deleted">Entry deleted</string>
     <string name="delete">Delete</string>
+    <string name="title_accounts">Accounts</string>
 </resources>

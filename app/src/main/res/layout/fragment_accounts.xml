@@ -53,9 +53,11 @@
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/accent_amber"
-                        app:cardCornerRadius="20dp"
-                        app:cardElevation="0dp">
+                        app:cardBackgroundColor="@color/bg_card"
+                        app:cardCornerRadius="24dp"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="2dp"
+                        app:strokeColor="@color/accent_amber">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -66,9 +68,12 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Total Balance"
-                                android:textColor="@color/bg_dark"
-                                android:textSize="14sp" />
+                                android:text="TOTAL LOOT"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="10sp"
+                                android:textStyle="bold"
+                                android:textAllCaps="true"
+                                android:letterSpacing="0.1" />
 
                             <TextView
                                 android:id="@+id/tv_total_balance_summary"
@@ -76,9 +81,10 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
                                 android:text="₹0.00"
-                                android:textColor="@color/bg_dark"
-                                android:textSize="24sp"
-                                android:textStyle="bold" />
+                                android:textColor="@color/accent_amber"
+                                android:textSize="28sp"
+                                android:textStyle="bold"
+                                android:fontFamily="sans-serif-condensed-light" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
@@ -87,9 +93,11 @@
                         android:layout_width="160dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
-                        app:cardBackgroundColor="@color/bg_surface"
-                        app:cardCornerRadius="20dp"
-                        app:cardElevation="0dp">
+                        app:cardBackgroundColor="@color/bg_card"
+                        app:cardCornerRadius="24dp"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="1dp"
+                        app:strokeColor="@color/bg_surface">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -100,9 +108,12 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Total Savings"
+                                android:text="STASHED"
                                 android:textColor="@color/text_secondary"
-                                android:textSize="14sp" />
+                                android:textSize="10sp"
+                                android:textStyle="bold"
+                                android:textAllCaps="true"
+                                android:letterSpacing="0.1" />
 
                             <TextView
                                 android:id="@+id/tv_total_savings_summary"
@@ -110,8 +121,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
                                 android:text="₹0.00"
-                                android:textColor="@color/income_text"
-                                android:textSize="18sp"
+                                android:textColor="@color/money_left"
+                                android:textSize="20sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -122,9 +133,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
                         android:layout_marginEnd="20dp"
-                        app:cardBackgroundColor="@color/bg_surface"
-                        app:cardCornerRadius="20dp"
-                        app:cardElevation="0dp">
+                        app:cardBackgroundColor="@color/bg_card"
+                        app:cardCornerRadius="24dp"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="1dp"
+                        app:strokeColor="@color/bg_surface">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -135,17 +148,21 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Liabilities"
+                                android:text="DEBT"
                                 android:textColor="@color/text_secondary"
-                                android:textSize="14sp" />
+                                android:textSize="10sp"
+                                android:textStyle="bold"
+                                android:textAllCaps="true"
+                                android:letterSpacing="0.1" />
 
                             <TextView
+                                android:id="@+id/tv_liabilities_summary"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
                                 android:text="₹0.00"
-                                android:textColor="@color/expense_text"
-                                android:textSize="18sp"
+                                android:textColor="@color/overspending"
+                                android:textSize="20sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -166,16 +183,32 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Wallet &amp; Bank Accounts"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textAllCaps="true"
-                android:letterSpacing="0.1"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Wallet &amp; Bank Accounts"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textAllCaps="true"
+                    android:letterSpacing="0.1" />
+
+                <ImageButton
+                    android:id="@+id/btn_add_account_inline"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@android:drawable/ic_input_add"
+                    app:tint="@color/accent_amber" />
+            </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_accounts"
@@ -183,18 +216,34 @@
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false" />
 
-            <TextView
-                android:id="@+id/tv_savings_header"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Savings Goals"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textAllCaps="true"
-                android:letterSpacing="0.1"
                 android:layout_marginTop="32dp"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:id="@+id/tv_savings_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Savings Goals"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textAllCaps="true"
+                    android:letterSpacing="0.1" />
+
+                <ImageButton
+                    android:id="@+id/btn_add_saving_inline"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@android:drawable/ic_input_add"
+                    app:tint="@color/accent_amber" />
+            </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_savings"
@@ -210,7 +259,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="24dp"
-        android:text="Add Account"
+        android:text="Add..."
         android:textColor="@color/bg_dark"
         app:icon="@android:drawable/ic_input_add"
         app:iconTint="@color/bg_dark"

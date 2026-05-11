@@ -34,17 +34,16 @@ import java.util.Collections;
 import java.util.HashMap;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import java.util.Calendar;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class HomeFragment extends Fragment {
 
     private BudgetViewModel viewModel;
-    private TextView tvWelcomeBack, tvRemainingBalance, tvSpentSoFar, tvDailyLimit, tvNoDataChart, tvMySaving, tvDailyLimitLabel;
+    private TextView tvWelcomeBack, tvRemainingBalance, tvSpentSoFar, tvDailyLimit, tvMySaving;
+    private View tvNoDataChart;
     private LinearProgressIndicator pbBudgetUsage;
     private RecyclerView rvRecentTransactions, rvHomeSavings;
     private TransactionAdapter adapter;
@@ -118,7 +117,8 @@ public class HomeFragment extends Fragment {
         viewModel.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 currentUser = user;
-                tvWelcomeBack.setText(String.format("Hey %s 👋", user.userName));
+                String greeting = getGreeting();
+                tvWelcomeBack.setText(String.format("%s, %s!", greeting, user.userName));
             }
         });
 
@@ -171,12 +171,23 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    private String getGreeting() {
+        Calendar c = Calendar.getInstance();
+        int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
+
+        if (timeOfDay >= 0 && timeOfDay < 12) {
+            return "Good Morning";
+        } else if (timeOfDay >= 12 && timeOfDay < 16) {
+            return "Good Afternoon";
+        } else if (timeOfDay >= 16 && timeOfDay < 21) {
+            return "Good Evening";
+        } else {
+            return "Good Night";
+        }
+    }
+
     private void calculateSavingsBreakdown(List<SavingWithAccount> savings) {
         clearSavingsBreakdown();
-        
-        // Add a header for Savings Insights if needed, or just append to the container
-        // For now, let's just append them to the existing llBreakdownContainer
-        
         for (SavingWithAccount s : savings) {
             double progress = (s.saving.currentAmount / s.saving.targetAmount) * 100;
             addSavingsBreakdownBar(s.saving.goalName + " " + s.saving.emoji, (int) progress);
@@ -184,8 +195,6 @@ public class HomeFragment extends Fragment {
     }
 
     private void clearSavingsBreakdown() {
-        // Logic to clear only savings bars if they are mixed
-        // For simplicity, let's assume we want to show both Expense and Savings insights
     }
 
     private void addSavingsBreakdownBar(String label, int percentage) {
@@ -197,13 +206,12 @@ public class HomeFragment extends Fragment {
         tvLabel.setText(label);
         tvPercent.setText(percentage + "%");
         pbBar.setProgress(Math.min(percentage, 100));
-        pbBar.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.money_left)));
+        pbBar.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.accent_blue)));
 
         llBreakdownContainer.addView(barView);
     }
 
     private void updateBudgetUI(double budget, double spent, double balance) {
-        // Since budget is derived from income, if income is zero, progress is zero
         if (budget <= 0) {
             pbBudgetUsage.setProgress(0);
             tvDailyLimit.setText("₹0");
@@ -221,7 +229,6 @@ public class HomeFragment extends Fragment {
             pbBudgetUsage.setIndicatorColor(ContextCompat.getColor(requireContext(), R.color.accent_amber));
         }
 
-        // Calculate Daily Safe Expense Limit based on available loot (balance)
         Calendar cal = Calendar.getInstance();
         int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
         int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);

@@ -1,238 +1,284 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_dark"
-    android:padding="24dp">
+    android:background="@color/bg_dark">
 
-    <!-- Header -->
-    <TextView
-        android:id="@+id/tv_add_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Entry"
-        android:textColor="@color/text_primary"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-        android:id="@+id/btn_edit_categories"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Edit Categories"
-        android:src="@android:drawable/ic_menu_edit"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/text_secondary" />
-
-    <!-- Type Toggle -->
-    <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/toggle_type"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        app:singleSelection="true"
-        app:selectionRequired="true"
-        app:checkedButton="@+id/btn_type_expense"
-        app:layout_constraintTop_toBottomOf="@id/tv_add_title">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_type_expense"
-            style="@style/Widget.App.ToggleButton"
-            android:layout_width="0dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/label_spent"
-            android:textAllCaps="false" />
+            android:padding="24dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_type_income"
-            style="@style/Widget.App.ToggleButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/label_gained"
-            android:textAllCaps="false" />
+            <!-- Dynamic Header Title -->
+            <TextView
+                android:id="@+id/tv_add_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Spent how much?"
+                android:textColor="@color/text_primary"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:letterSpacing="-0.01"
+                app:layout_constraintEnd_toStartOf="@id/btn_edit_categories"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_type_saving"
-            style="@style/Widget.App.ToggleButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Saving"
-            android:textAllCaps="false" />
+            <ImageButton
+                android:id="@+id/btn_edit_categories"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Edit Categories"
+                android:src="@android:drawable/ic_menu_edit"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_add_title"
+                app:layout_constraintBottom_toBottomOf="@id/tv_add_title"
+                app:tint="@color/accent_amber" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_type_account"
-            style="@style/Widget.App.ToggleButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Account"
-            android:textAllCaps="false" />
-    </com.google.android.material.button.MaterialButtonToggleGroup>
+            <!-- Custom Pill Toggle -->
+            <LinearLayout
+                android:id="@+id/card_type_toggle"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/bg_pill_toggle"
+                android:padding="4dp"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/tv_add_title">
 
-    <!-- Amount Input -->
-    <LinearLayout
-        android:id="@+id/ll_amount_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/toggle_type">
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/toggle_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:singleSelection="true"
+                    app:selectionRequired="true"
+                    app:checkedButton="@+id/btn_type_expense">
 
-        <TextView
-            android:id="@+id/tv_currency"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="₹"
-            android:textColor="@color/accent_amber"
-            android:textSize="40sp"
-            android:textStyle="bold" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_type_expense"
+                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="Spend"
+                        android:textAllCaps="false"
+                        android:textStyle="bold"
+                        app:cornerRadius="100dp"
+                        app:backgroundTint="@color/btn_type_expense_bg"
+                        app:rippleColor="@color/expense_glow"
+                        android:textColor="@color/btn_type_text_color"
+                        app:strokeWidth="0dp" />
 
-        <EditText
-            android:id="@+id/et_amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:hint="0"
-            android:inputType="numberDecimal"
-            android:minWidth="100dp"
-            android:padding="8dp"
-            android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_muted"
-            android:textSize="56sp"
-            android:textStyle="bold"
-            android:importantForAutofill="no">
-            <requestFocus />
-        </EditText>
-    </LinearLayout>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_type_income"
+                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="Gain"
+                        android:textAllCaps="false"
+                        android:textStyle="bold"
+                        app:cornerRadius="100dp"
+                        app:backgroundTint="@color/btn_type_income_bg"
+                        app:rippleColor="@color/income_glow"
+                        android:textColor="@color/btn_type_text_color"
+                        app:strokeWidth="0dp" />
 
-    <!-- Categories -->
-<TextView
-        android:id="@+id/tv_acc_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Account"
-        android:textColor="@color/text_secondary"
-        android:textSize="12sp"
-        android:textAllCaps="true"
-        android:letterSpacing="0.1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ll_amount_container" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_type_saving"
+                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="Save"
+                        android:textAllCaps="false"
+                        android:textStyle="bold"
+                        app:cornerRadius="100dp"
+                        app:backgroundTint="@color/btn_type_saving_bg"
+                        app:rippleColor="@color/blue_glow"
+                        android:textColor="@color/btn_type_text_color"
+                        app:strokeWidth="0dp" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+            </LinearLayout>
 
-    <HorizontalScrollView
-        android:id="@+id/hsv_accounts"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:scrollbars="none"
-        app:layout_constraintTop_toBottomOf="@id/tv_acc_label">
+            <!-- Amount Area -->
+            <LinearLayout
+                android:id="@+id/ll_amount_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/card_type_toggle">
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/cg_accounts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:singleSelection="true"
-            app:selectionRequired="true" />
-    </HorizontalScrollView>
+                <TextView
+                    android:id="@+id/tv_currency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="₹"
+                    android:textColor="@color/accent_amber"
+                    android:textSize="44sp"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-light" />
 
-    <TextView
-        android:id="@+id/tv_cat_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Category"
-        android:textColor="@color/text_secondary"
-        android:textSize="12sp"
-        android:textAllCaps="true"
-        android:letterSpacing="0.1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/hsv_accounts" />
+                <EditText
+                    android:id="@+id/et_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="0"
+                    android:inputType="numberDecimal"
+                    android:minWidth="120dp"
+                    android:padding="12dp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_muted"
+                    android:textSize="64sp"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:importantForAutofill="no" />
+            </LinearLayout>
 
-    <HorizontalScrollView
-        android:id="@+id/hsv_categories"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:scrollbars="none"
-        app:layout_constraintTop_toBottomOf="@id/tv_cat_label">
+            <!-- Source Account -->
+            <TextView
+                android:id="@+id/tv_acc_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="Source Account"
+                android:textColor="@color/text_muted"
+                android:textSize="11sp"
+                android:textAllCaps="true"
+                android:letterSpacing="0.15"
+                android:fontFamily="sans-serif-black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ll_amount_container" />
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/cg_categories"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:singleSelection="true"
-            app:selectionRequired="false">
-            <!-- Dynamic Chips -->
-        </com.google.android.material.chip.ChipGroup>
-    </HorizontalScrollView>
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cg_accounts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:singleSelection="true"
+                app:selectionRequired="true"
+                app:layout_constraintTop_toBottomOf="@id/tv_acc_label" />
 
-    <!-- Date and Time Picker -->
-    <LinearLayout
-        android:id="@+id/ll_datetime_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/hsv_categories">
+            <!-- Category / Goal -->
+            <TextView
+                android:id="@+id/tv_cat_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Category / Goal"
+                android:textColor="@color/text_muted"
+                android:textSize="11sp"
+                android:textAllCaps="true"
+                android:letterSpacing="0.15"
+                android:fontFamily="sans-serif-black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cg_accounts" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_date"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Date"
-            android:textColor="@color/text_primary"
-            app:icon="@android:drawable/ic_menu_my_calendar"
-            app:iconTint="@color/accent_amber" />
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cg_categories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:singleSelection="true"
+                app:selectionRequired="false"
+                app:layout_constraintTop_toBottomOf="@id/tv_cat_label" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_time"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Time"
-            android:textColor="@color/text_primary"
-            app:icon="@android:drawable/ic_menu_recent_history"
-            app:iconTint="@color/accent_amber" />
-    </LinearLayout>
+            <!-- Date/Time Buttons -->
+            <LinearLayout
+                android:id="@+id/ll_datetime_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/cg_categories">
 
-    <!-- Note -->
-    <EditText
-        android:id="@+id/et_note"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/bg_note_input"
-        android:hint="Add a note..."
-        android:padding="16dp"
-        android:textColor="@color/text_primary"
-        android:textColorHint="@color/text_muted"
-        android:textSize="16sp"
-        android:importantForAutofill="no"
-        app:layout_constraintTop_toBottomOf="@id/ll_datetime_container" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_date"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:text="Today"
+                    android:textColor="@color/text_primary"
+                    android:textAllCaps="false"
+                    app:cornerRadius="12dp"
+                    app:strokeColor="@color/bg_surface"
+                    app:icon="@android:drawable/ic_menu_my_calendar"
+                    app:iconTint="@color/accent_amber" />
 
-    <!-- CTA -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_save"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginBottom="24dp"
-        android:text="Done"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:backgroundTint="@color/accent_amber"
-        app:cornerRadius="12dp"
-        app:layout_constraintBottom_toBottomOf="parent" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_time"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text="Now"
+                    android:textColor="@color/text_primary"
+                    android:textAllCaps="false"
+                    app:cornerRadius="12dp"
+                    app:strokeColor="@color/bg_surface"
+                    app:icon="@android:drawable/ic_menu_recent_history"
+                    app:iconTint="@color/accent_amber" />
+            </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <!-- Note -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_note"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:hint="Add a short note..."
+                app:boxBackgroundColor="@color/bg_card"
+                app:boxCornerRadiusTopStart="16dp"
+                app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusBottomStart="16dp"
+                app:boxCornerRadiusBottomEnd="16dp"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:hintTextColor="@color/text_muted"
+                app:layout_constraintTop_toBottomOf="@id/ll_datetime_container">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_note"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary"
+                    android:inputType="textShortMessage" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                app:layout_constraintTop_toBottomOf="@id/til_note" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_save"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginBottom="12dp"
+                android:text="Capture This Move 🚀"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                app:backgroundTint="@color/accent_amber"
+                app:cornerRadius="20dp"
+                app:elevation="8dp"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

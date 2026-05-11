@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 public interface BudgetDAO {
     
     // User Account Operations
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertUserAccount(UserAccountEntity account);
     
     @Update
@@ -31,7 +32,7 @@ public interface BudgetDAO {
     UserAccountEntity getFirstUserSync();
     
     // Transaction Operations
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertTransaction(TransactionEntity transaction);
     
     @Update
@@ -56,7 +57,7 @@ public interface BudgetDAO {
     void deleteAllTransactionsForUser(int userId);
 
     // Category Operations
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     long insertCategory(CategoryEntity category);
 
     @Update
@@ -90,7 +91,18 @@ public interface BudgetDAO {
     @Query("DELETE FROM savings WHERE userId = :userId")
     void deleteAllSavingsForUser(int userId);
 
-    @Query("SELECT ua.id, ua.userName, ua.databaseName, COALESCE(SUM(CASE WHEN t.type = 'Income' THEN t.amount ELSE -t.amount END), 0) as balance FROM user_accounts ua LEFT JOIN transactions t ON ua.id = t.userId GROUP BY ua.id")
+    @Query("SELECT ua.id, ua.userName, ua.databaseName, ua.emoji, COALESCE(SUM(CASE WHEN t.type = 'Income' THEN t.amount ELSE -t.amount END), 0) as balance FROM user_accounts ua LEFT JOIN transactions t ON ua.id = t.userId GROUP BY ua.id")
     LiveData<List<AccountWithBalance>> getAccountsWithBalance();
+    @Query("DELETE FROM transactions")
+    void deleteAllTransactions();
+
+    @Query("DELETE FROM savings")
+    void deleteAllSavings();
+
+    @Query("DELETE FROM user_accounts")
+    void deleteAllUserAccounts();
+
+    @Query("DELETE FROM categories")
+    void deleteAllCategories();
 }
 

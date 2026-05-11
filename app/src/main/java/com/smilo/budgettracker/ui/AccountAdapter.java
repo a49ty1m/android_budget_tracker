@@ -52,14 +52,10 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountV
         int color = account.balance >= 0 ? R.color.money_left : R.color.overspending;
         holder.tvAccountBalance.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), color));
 
-        // Icon based on name
-        if (account.databaseName.toLowerCase().contains("bank")) {
-            holder.ivIcon.setImageResource(android.R.drawable.ic_menu_agenda);
-            holder.ivIcon.setColorFilter(ContextCompat.getColor(holder.itemView.getContext(), R.color.accent_gold));
-        } else {
-            holder.ivIcon.setImageResource(android.R.drawable.ic_menu_myplaces);
-            holder.ivIcon.setColorFilter(ContextCompat.getColor(holder.itemView.getContext(), R.color.income_green));
-        }
+        // Display Emoji
+        holder.tvEmoji.setText(account.emoji != null ? account.emoji : "💵");
+        holder.ivIcon.setVisibility(View.GONE);
+        holder.tvEmoji.setVisibility(View.VISIBLE);
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
@@ -74,7 +70,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountV
     }
 
     static class AccountViewHolder extends RecyclerView.ViewHolder {
-        TextView tvUserName, tvDatabaseName, tvAccountBalance;
+        TextView tvUserName, tvDatabaseName, tvAccountBalance, tvEmoji;
         ImageView ivIcon;
 
         AccountViewHolder(@NonNull View itemView) {
@@ -83,6 +79,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountV
             tvDatabaseName = itemView.findViewById(R.id.tv_database_name);
             tvAccountBalance = itemView.findViewById(R.id.tv_account_balance);
             ivIcon = itemView.findViewById(R.id.iv_account_icon);
+            tvEmoji = itemView.findViewById(R.id.tv_account_emoji);
         }
     }
 }

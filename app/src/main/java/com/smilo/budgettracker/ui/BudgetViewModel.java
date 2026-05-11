@@ -51,8 +51,7 @@ public class BudgetViewModel extends AndroidViewModel {
             UserAccountEntity user = repository.getFirstUserSync();
             if (user == null) {
                 long now = System.currentTimeMillis();
-                repository.insertUserAccount(new UserAccountEntity("Smilo", "Wallet", now, now));
-                repository.insertUserAccount(new UserAccountEntity("Smilo", "HDFC Bank", now, now));
+                repository.insertUserAccount(new UserAccountEntity("Smilo", "Wallet", "💵", now, now));
             } else {
                 currentUserId.postValue(user.id);
             }
@@ -144,6 +143,10 @@ public class BudgetViewModel extends AndroidViewModel {
             repository.deleteAllTransactionsForUser(userId);
             repository.deleteAllSavingsForUser(userId);
         }
+    }
+
+    public void resetEverything(String newUserName) {
+        repository.resetEverything(newUserName, this::ensureUserExists);
     }
     
     public void setCurrentUserId(int userId) {

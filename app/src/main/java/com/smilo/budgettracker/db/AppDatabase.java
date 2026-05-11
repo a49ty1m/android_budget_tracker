@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase;
 
 @Database(
     entities = {UserAccountEntity.class, TransactionEntity.class, CategoryEntity.class, SavingEntity.class},
-    version = 7,
+    version = 9,
     exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {

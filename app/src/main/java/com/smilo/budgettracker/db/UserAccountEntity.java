@@ -10,12 +10,14 @@ public class UserAccountEntity {
     
     public String userName;
     public String databaseName;
+    public String emoji;
     public long createdAt;
     public long updatedAt;
 
-    public UserAccountEntity(String userName, String databaseName, long createdAt, long updatedAt) {
+    public UserAccountEntity(String userName, String databaseName, String emoji, long createdAt, long updatedAt) {
         this.userName = userName;
         this.databaseName = databaseName;
+        this.emoji = emoji;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }

@@ -90,6 +90,16 @@ public class AccountFragment extends Fragment {
 
         fabAddAccount.setOnClickListener(v -> showAddOptionsDialog());
 
+        View btnAddSavingInline = view.findViewById(R.id.btn_add_saving_inline);
+        if (btnAddSavingInline != null) {
+            btnAddSavingInline.setOnClickListener(v -> showAddSavingDialog());
+        }
+
+        View btnAddAccountInline = view.findViewById(R.id.btn_add_account_inline);
+        if (btnAddAccountInline != null) {
+            btnAddAccountInline.setOnClickListener(v -> showAddAccountDialog());
+        }
+
         if (getArguments() != null) {
             if (getArguments().getBoolean("scrollToSavings", false)) {
                 view.post(() -> {
@@ -105,23 +115,29 @@ public class AccountFragment extends Fragment {
     }
 
     private void showAddOptionsDialog() {
-        String[] options = {"Add Account", "Add Saving Goal"};
-        new AlertDialog.Builder(requireContext(), R.style.AppTheme)
-                .setTitle("What to add?")
-                .setItems(options, (dialog, which) -> {
-                    if (which == 0) {
-                        showAddAccountDialog();
-                    } else {
-                        showAddSavingDialog();
-                    }
-                })
-                .show();
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_what_to_add, null);
+        AlertDialog dialog = new AlertDialog.Builder(requireContext(), R.style.AppTheme)
+                .setView(dialogView)
+                .create();
+
+        dialogView.findViewById(R.id.btn_add_account_option).setOnClickListener(v -> {
+            dialog.dismiss();
+            showAddAccountDialog();
+        });
+
+        dialogView.findViewById(R.id.btn_add_saving_option).setOnClickListener(v -> {
+            dialog.dismiss();
+            showAddSavingDialog();
+        });
+
+        dialog.show();
     }
 
     private void showAddAccountDialog() {
         View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_account, null);
         EditText etUserName = dialogView.findViewById(R.id.et_user_name);
         EditText etDatabaseName = dialogView.findViewById(R.id.et_database_name);
+        EditText etEmoji = dialogView.findViewById(R.id.et_account_emoji);
 
         new AlertDialog.Builder(requireContext(), R.style.AppTheme)
                 .setTitle("New Account")
@@ -129,9 +145,11 @@ public class AccountFragment extends Fragment {
                 .setPositiveButton("Create", (dialog, which) -> {
                     String name = etUserName.getText().toString().trim();
                     String db = etDatabaseName.getText().toString().trim();
+                    String emoji = etEmoji.getText().toString().trim();
                     if (!name.isEmpty() && !db.isEmpty()) {
+                        if (emoji.isEmpty()) emoji = "💵";
                         long currentTime = System.currentTimeMillis();
-                        viewModel.insertAccount(new UserAccountEntity(name, db, currentTime, currentTime));
+                        viewModel.insertAccount(new UserAccountEntity(name, db, emoji, currentTime, currentTime));
                     }
                 })
                 .setNegativeButton("Cancel", null)
@@ -203,9 +221,11 @@ public class AccountFragment extends Fragment {
         View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit_account, null);
         EditText etUserName = dialogView.findViewById(R.id.et_account_name);
         EditText etDatabaseName = dialogView.findViewById(R.id.et_database_name);
+        EditText etEmoji = dialogView.findViewById(R.id.et_account_emoji);
 
         etUserName.setText(account.userName);
         etDatabaseName.setText(account.databaseName);
+        etEmoji.setText(account.emoji);
 
         new AlertDialog.Builder(requireContext(), R.style.AppTheme)
                 .setTitle("Edit Account")
@@ -213,11 +233,14 @@ public class AccountFragment extends Fragment {
                 .setPositiveButton("Update", (dialog, which) -> {
                     String userName = etUserName.getText().toString().trim();
                     String dbName = etDatabaseName.getText().toString().trim();
+                    String emoji = etEmoji.getText().toString().trim();
 
                     if (!userName.isEmpty() && !dbName.isEmpty()) {
+                        if (emoji.isEmpty()) emoji = "💵";
                         UserAccountEntity entity = new UserAccountEntity(
                                 userName,
                                 dbName,
+                                emoji,
                                 System.currentTimeMillis(), // createdAt
                                 System.currentTimeMillis() // updatedAt
                         );
@@ -230,7 +253,7 @@ public class AccountFragment extends Fragment {
                             .setTitle("Delete Account?")
                             .setMessage("Delete this account and all associated transactions?")
                             .setPositiveButton("Delete", (d, w) -> {
-                                UserAccountEntity entity = new UserAccountEntity(account.userName, account.databaseName, System.currentTimeMillis(), System.currentTimeMillis());
+                                UserAccountEntity entity = new UserAccountEntity(account.userName, account.databaseName, account.emoji, System.currentTimeMillis(), System.currentTimeMillis());
                                 entity.id = account.id;
                                 viewModel.deleteAccount(entity);
                             })
