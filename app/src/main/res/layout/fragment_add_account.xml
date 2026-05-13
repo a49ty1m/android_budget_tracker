@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_dark"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/tv_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Account"
+        android:textColor="@color/text_primary"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/ll_title_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_header">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="💳"
+            android:textSize="24sp"
+            android:layout_marginEnd="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Account"
+            android:textColor="@color/text_primary"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_user_name"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:hint="Owner (e.g. Personal, Joint)"
+        app:boxStrokeColor="@color/accent_amber"
+        app:hintTextColor="@color/accent_amber"
+        app:startIconDrawable="@android:drawable/ic_menu_myplaces"
+        app:startIconTint="@color/accent_amber"
+        app:boxCornerRadiusTopStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusBottomEnd="12dp"
+        app:layout_constraintTop_toBottomOf="@id/ll_title_container">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
+            android:inputType="textPersonName" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_row_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/til_user_name">
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Wallet Name (e.g. Ba..."
+            app:boxStrokeColor="@color/accent_amber"
+            app:hintTextColor="@color/accent_amber"
+            app:startIconDrawable="@android:drawable/ic_menu_view"
+            app:startIconTint="@color/accent_amber"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusBottomEnd="12dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_database_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_primary"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:hint="Icon"
+            app:boxStrokeColor="@color/accent_amber"
+            app:hintTextColor="@color/accent_amber"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusBottomEnd="12dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_account_emoji"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_primary"
+                android:gravity="center"
+                android:hint="💵"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:cardBackgroundColor="@color/accent_glow"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
+        app:layout_constraintTop_toBottomOf="@id/ll_row_2">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:text="Tip: Use separate accounts to see where your money actually sits (Cash vs Bank)."
+            android:textColor="@color/accent_amber"
+            android:textSize="12sp"
+            android:lineSpacingExtra="2dp" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/card_tip">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_cancel"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CANCEL"
+            android:textColor="@color/accent_amber"
+            android:layout_marginEnd="16dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_create"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CREATE"
+            android:textColor="@color/accent_amber" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
