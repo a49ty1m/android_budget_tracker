@@ -24,6 +24,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import androidx.navigation.Navigation;
 import com.smilo.budgettracker.R;
 import com.smilo.budgettracker.db.AccountWithBalance;
 import com.smilo.budgettracker.db.CategoryEntity;
@@ -327,58 +328,7 @@ public class AddExpenseFragment extends Fragment {
     }
 
     private void showAddSavingDialog() {
-        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_saving, null);
-        EditText etGoalName = dialogView.findViewById(R.id.et_goal_name);
-        EditText etTargetAmount = dialogView.findViewById(R.id.et_target_amount);
-        EditText etCurrentAmount = dialogView.findViewById(R.id.et_current_amount);
-        EditText etEmoji = dialogView.findViewById(R.id.et_emoji);
-        AutoCompleteTextView actvAccount = dialogView.findViewById(R.id.actv_saving_account);
-
-        final List<AccountWithBalance>[] accountsWrapper = new List[1];
-        final int[] selectedAccountId = {-1};
-
-        viewModel.getAccountsWithBalance().observe(getViewLifecycleOwner(), accounts -> {
-            if (accounts != null && !accounts.isEmpty()) {
-                accountsWrapper[0] = accounts;
-                List<String> accountNames = new ArrayList<>();
-                for (AccountWithBalance acc : accounts) {
-                    accountNames.add(acc.emoji + " " + acc.databaseName);
-                }
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
-                        android.R.layout.simple_dropdown_item_1line, accountNames);
-                actvAccount.setAdapter(adapter);
-                actvAccount.setText(accountNames.get(0), false);
-                selectedAccountId[0] = accounts.get(0).id;
-            }
-        });
-
-        actvAccount.setOnItemClickListener((parent, view1, position, id) -> {
-            if (accountsWrapper[0] != null) {
-                selectedAccountId[0] = accountsWrapper[0].get(position).id;
-            }
-        });
-
-        new AlertDialog.Builder(requireContext(), R.style.Theme_BudgetTracker)
-                .setView(dialogView)
-                .setPositiveButton("Create", (dialog, which) -> {
-                    String name = etGoalName.getText().toString().trim();
-                    String targetStr = etTargetAmount.getText().toString().trim();
-                    String currentStr = etCurrentAmount.getText().toString().trim();
-                    String emoji = etEmoji.getText().toString().trim();
-
-                    if (!name.isEmpty() && !targetStr.isEmpty() && selectedAccountId[0] != -1) {
-                        try {
-                            double target = Double.parseDouble(targetStr);
-                            double current = currentStr.isEmpty() ? 0 : Double.parseDouble(currentStr);
-                            if (emoji.isEmpty()) emoji = "🎯";
-                            viewModel.insertSaving(new SavingEntity(selectedAccountId[0], name, target, current, emoji, System.currentTimeMillis()));
-                        } catch (NumberFormatException e) {
-                            Toast.makeText(getContext(), "Invalid amount", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
+        Navigation.findNavController(requireView()).navigate(R.id.action_addExpenseFragment_to_addSavingGoalFragment);
     }
 
     private void showEditSavingDialog(SavingEntity saving) {
@@ -436,25 +386,7 @@ public class AddExpenseFragment extends Fragment {
     }
 
     private void showAddAccountDialog() {
-        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_account, null);
-        EditText etUserName = dialogView.findViewById(R.id.et_user_name);
-        EditText etDatabaseName = dialogView.findViewById(R.id.et_database_name);
-        EditText etEmoji = dialogView.findViewById(R.id.et_account_emoji);
-
-        new AlertDialog.Builder(requireContext(), R.style.Theme_BudgetTracker)
-                .setView(dialogView)
-                .setPositiveButton("Create", (dialog, which) -> {
-                    String name = etUserName.getText().toString().trim();
-                    String db = etDatabaseName.getText().toString().trim();
-                    String emoji = etEmoji.getText().toString().trim();
-                    if (!name.isEmpty() && !db.isEmpty()) {
-                        if (emoji.isEmpty()) emoji = "💵";
-                        long currentTime = System.currentTimeMillis();
-                        viewModel.insertAccount(new UserAccountEntity(name, db, emoji, currentTime, currentTime));
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
+        Navigation.findNavController(requireView()).navigate(R.id.action_addExpenseFragment_to_addAccountFragment);
     }
 
     private void showEditAccountDialog(UserAccountEntity account) {

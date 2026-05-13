@@ -63,8 +63,33 @@
             android:id="@+id/et_goal_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textCapWords"
+            android:textColor="@color/text_primary" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_target_amount"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:hint="Target Amount"
+        app:boxStrokeColor="@color/accent_amber"
+        app:hintTextColor="@color/accent_amber"
+        app:prefixText="₹"
+        app:prefixTextColor="@color/accent_amber"
+        app:boxCornerRadiusTopStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusBottomEnd="12dp"
+        app:layout_constraintTop_toBottomOf="@id/til_goal_name">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_target_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:textColor="@color/text_primary"
-            android:inputType="textCapWords" />
+            android:inputType="numberDecimal" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
@@ -74,37 +99,40 @@
         android:orientation="horizontal"
         android:layout_marginTop="20dp"
         android:baselineAligned="false"
-        app:layout_constraintTop_toBottomOf="@id/til_goal_name">
+        app:layout_constraintTop_toBottomOf="@id/til_target_amount">
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:id="@+id/til_saving_account"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginEnd="12dp"
-            android:hint="Target Amount"
+            android:hint="Link to Account"
             app:boxStrokeColor="@color/accent_amber"
             app:hintTextColor="@color/accent_amber"
-            app:prefixText="₹"
-            app:prefixTextColor="@color/accent_amber"
+            app:startIconDrawable="@android:drawable/ic_menu_myplaces"
+            app:startIconTint="@color/accent_amber"
             app:boxCornerRadiusTopStart="12dp"
             app:boxCornerRadiusTopEnd="12dp"
             app:boxCornerRadiusBottomStart="12dp"
             app:boxCornerRadiusBottomEnd="12dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_target_amount"
+            <AutoCompleteTextView
+                android:id="@+id/actv_saving_account"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="none"
                 android:textColor="@color/text_primary"
-                android:inputType="numberDecimal" />
+                android:paddingStart="48dp"
+                android:paddingEnd="12dp"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="140dp"
             android:layout_height="wrap_content"
-            android:hint="Emoji"
+            android:hint="Icon"
             app:boxStrokeColor="@color/accent_amber"
             app:hintTextColor="@color/accent_amber"
             app:boxCornerRadiusTopStart="12dp"
@@ -118,35 +146,9 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_primary"
                 android:gravity="center"
-                android:hint="🎯"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_saving_account"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:hint="Link to Account"
-        app:boxStrokeColor="@color/accent_amber"
-        app:hintTextColor="@color/accent_amber"
-        app:startIconDrawable="@android:drawable/ic_menu_myplaces"
-        app:startIconTint="@color/accent_amber"
-        app:boxCornerRadiusTopStart="12dp"
-        app:boxCornerRadiusTopEnd="12dp"
-        app:boxCornerRadiusBottomStart="12dp"
-        app:boxCornerRadiusBottomEnd="12dp"
-        app:layout_constraintTop_toBottomOf="@id/ll_row_2">
-
-        <AutoCompleteTextView
-            android:id="@+id/actv_saving_account"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="none"
-            android:textColor="@color/text_primary" />
-    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_starting_amount"
@@ -163,7 +165,7 @@
         app:boxCornerRadiusTopEnd="12dp"
         app:boxCornerRadiusBottomStart="12dp"
         app:boxCornerRadiusBottomEnd="12dp"
-        app:layout_constraintTop_toBottomOf="@id/til_saving_account">
+        app:layout_constraintTop_toBottomOf="@id/ll_row_2">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_current_amount"

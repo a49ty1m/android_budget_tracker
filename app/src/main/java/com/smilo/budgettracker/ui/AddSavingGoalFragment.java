@@ -48,7 +48,7 @@ public class AddSavingGoalFragment extends Fragment {
                 accountsWrapper[0] = accounts;
                 List<String> accountNames = new ArrayList<>();
                 for (AccountWithBalance acc : accounts) {
-                    accountNames.add(String.format("(%s-%s)", acc.userName, acc.databaseName));
+                    accountNames.add(acc.emoji + " (" + acc.userName + "-" + acc.databaseName + ")");
                 }
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
                         android.R.layout.simple_dropdown_item_1line, accountNames);

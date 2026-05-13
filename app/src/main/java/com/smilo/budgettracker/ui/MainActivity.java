@@ -1,6 +1,7 @@
 package com.smilo.budgettracker.ui;
 
 import android.os.Bundle;
+import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -28,6 +29,14 @@ public class MainActivity extends AppCompatActivity {
                     navController.popBackStack(R.id.homeFragment, false);
                 }
                 return NavigationUI.onNavDestinationSelected(item, navController);
+            });
+
+            navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+                if (destination.getId() == R.id.addAccountFragment || destination.getId() == R.id.addSavingGoalFragment) {
+                    bottomNav.setVisibility(View.GONE);
+                } else {
+                    bottomNav.setVisibility(View.VISIBLE);
+                }
             });
         }
     }

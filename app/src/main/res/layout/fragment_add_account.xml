@@ -73,6 +73,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="20dp"
+        android:baselineAligned="false"
         app:layout_constraintTop_toBottomOf="@id/til_user_name">
 
         <com.google.android.material.textfield.TextInputLayout
@@ -80,7 +81,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Wallet Name (e.g. Ba..."
+            android:hint="Wallet Name (e.g. Bank)"
             app:boxStrokeColor="@color/accent_amber"
             app:hintTextColor="@color/accent_amber"
             app:startIconDrawable="@android:drawable/ic_menu_view"
@@ -117,7 +118,6 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_primary"
                 android:gravity="center"
-                android:hint="💵"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>

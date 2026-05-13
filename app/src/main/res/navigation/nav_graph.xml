@@ -30,6 +30,12 @@
         <action
             android:id="@+id/action_addExpenseFragment_to_accountFragment"
             app:destination="@id/accountFragment" />
+        <action
+            android:id="@+id/action_addExpenseFragment_to_addAccountFragment"
+            app:destination="@id/addAccountFragment" />
+        <action
+            android:id="@+id/action_addExpenseFragment_to_addSavingGoalFragment"
+            app:destination="@id/addSavingGoalFragment" />
     </fragment>
 
     <fragment
@@ -54,6 +60,23 @@
     <fragment
         android:id="@+id/accountFragment"
         android:name="com.smilo.budgettracker.ui.AccountFragment"
-        android:label="Accounts &amp; Savings" />
+        android:label="Accounts &amp; Savings" >
+        <action
+            android:id="@+id/action_accountFragment_to_addAccountFragment"
+            app:destination="@id/addAccountFragment" />
+        <action
+            android:id="@+id/action_accountFragment_to_addSavingGoalFragment"
+            app:destination="@id/addSavingGoalFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addAccountFragment"
+        android:name="com.smilo.budgettracker.ui.AddAccountFragment"
+        android:label="Add Account" />
+
+    <fragment
+        android:id="@+id/addSavingGoalFragment"
+        android:name="com.smilo.budgettracker.ui.AddSavingGoalFragment"
+        android:label="Add Saving Goal" />
 
 </navigation>
