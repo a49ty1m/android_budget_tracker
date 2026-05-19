@@ -46,10 +46,10 @@
             <LinearLayout
                 android:id="@+id/card_type_toggle"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="52dp"
                 android:layout_marginTop="24dp"
                 android:background="@drawable/bg_pill_toggle"
-                android:padding="4dp"
+                android:padding="2dp"
                 android:orientation="horizontal"
                 app:layout_constraintTop_toBottomOf="@id/tv_add_title">
 
@@ -63,48 +63,33 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_type_expense"
-                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                        style="@style/Widget.App.ToggleButton"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:text="Spend"
                         android:textAllCaps="false"
-                        android:textStyle="bold"
-                        app:cornerRadius="100dp"
-                        app:backgroundTint="@color/btn_type_expense_bg"
-                        app:rippleColor="@color/expense_glow"
-                        android:textColor="@color/btn_type_text_color"
-                        app:strokeWidth="0dp" />
+                        android:textStyle="bold" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_type_income"
-                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                        style="@style/Widget.App.ToggleButton"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:text="Gain"
                         android:textAllCaps="false"
-                        android:textStyle="bold"
-                        app:cornerRadius="100dp"
-                        app:backgroundTint="@color/btn_type_income_bg"
-                        app:rippleColor="@color/income_glow"
-                        android:textColor="@color/btn_type_text_color"
-                        app:strokeWidth="0dp" />
+                        android:textStyle="bold" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_type_saving"
-                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                        style="@style/Widget.App.ToggleButton"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:text="Save"
                         android:textAllCaps="false"
-                        android:textStyle="bold"
-                        app:cornerRadius="100dp"
-                        app:backgroundTint="@color/btn_type_saving_bg"
-                        app:rippleColor="@color/blue_glow"
-                        android:textColor="@color/btn_type_text_color"
-                        app:strokeWidth="0dp" />
+                        android:textStyle="bold" />
                 </com.google.android.material.button.MaterialButtonToggleGroup>
             </LinearLayout>
 

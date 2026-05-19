@@ -36,6 +36,8 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.Color;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -84,26 +86,9 @@ public class AddExpenseFragment extends Fragment {
         // setupTypeToggle(); // Delaying this
         setupDateTimePickers();
 
-        // Handle arguments for initial state
-        String initialType = "Expense";
-        if (getArguments() != null) {
-            initialType = getArguments().getString("initialType", "Expense");
-        }
-
-        switch (initialType) {
-            case "Income":
-                toggleType.check(R.id.btn_type_income);
-                switchToIncomeUI();
-                break;
-            case "Saving":
-                toggleType.check(R.id.btn_type_saving);
-                switchToSavingUI();
-                break;
-            default:
-                toggleType.check(R.id.btn_type_expense);
-                switchToExpenseUI();
-                break;
-        }
+        // Force "Spend" (Expense) to be the default state every time the screen opens
+        toggleType.check(R.id.btn_type_expense);
+        switchToExpenseUI();
 
         setupTypeToggle(); // Enable listener now
 
@@ -127,6 +112,7 @@ public class AddExpenseFragment extends Fragment {
         if (toggleType == null) return;
         toggleType.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (isChecked) {
+                // Ensure only one button is styled as checked at a time
                 updateCheckedButtonStyle();
                 if (checkedId == R.id.btn_type_income) {
                     switchToIncomeUI();
@@ -142,27 +128,41 @@ public class AddExpenseFragment extends Fragment {
     private void updateCheckedButtonStyle() {
         if (!isAdded() || getContext() == null || toggleType == null) return;
         
-        int[] ids = {R.id.btn_type_expense, R.id.btn_type_income, R.id.btn_type_saving};
         int checkedId = toggleType.getCheckedButtonId();
+        int radius = (int) (26 * getResources().getDisplayMetrics().density);
         
-        for (int id : ids) {
-            MaterialButton btn = toggleType.findViewById(id);
-            if (btn == null) continue;
+        for (int i = 0; i < toggleType.getChildCount(); i++) {
+            View child = toggleType.getChildAt(i);
+            if (!(child instanceof MaterialButton)) continue;
+            MaterialButton btn = (MaterialButton) child;
             
-            if (id == checkedId) {
+            // Re-apply absolute state every time
+            btn.setRippleColor(null);
+            btn.setElevation(0f);
+            btn.setStrokeWidth(0);
+            btn.setInsetTop(0);
+            btn.setInsetBottom(0);
+            btn.setPadding(0, 0, 0, 0);
+            
+            GradientDrawable shape = new GradientDrawable();
+            shape.setShape(GradientDrawable.RECTANGLE);
+            shape.setCornerRadius(radius);
+            
+            if (btn.getId() == checkedId) {
                 int colorRes = R.color.overspending;
-                if (id == R.id.btn_type_income) colorRes = R.color.money_left;
-                else if (id == R.id.btn_type_saving) colorRes = R.color.accent_blue;
+                if (btn.getId() == R.id.btn_type_income) colorRes = R.color.money_left;
+                else if (btn.getId() == R.id.btn_type_saving) colorRes = R.color.accent_blue;
                 
-                btn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), colorRes)));
+                shape.setColor(ContextCompat.getColor(requireContext(), colorRes));
                 btn.setTextColor(ContextCompat.getColor(requireContext(), R.color.bg_dark));
-                // Perfect elliptical shape
-                btn.setCornerRadius((int) (100 * getResources().getDisplayMetrics().density));
+                btn.setAlpha(1.0f);
             } else {
-                btn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.transparent)));
+                shape.setColor(Color.TRANSPARENT);
                 btn.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
-                btn.setCornerRadius((int) (100 * getResources().getDisplayMetrics().density));
+                btn.setAlpha(1.0f);
             }
+            
+            btn.setBackground(shape);
         }
     }
 
